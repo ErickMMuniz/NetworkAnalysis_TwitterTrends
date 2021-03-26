@@ -32,7 +32,7 @@ Python >=  3.0.0
 - R,Tidyverse
 - Gephi
 
-![foxdemo](https://drive.google.com/file/d/1zObFbVOOQZY2DI8eCXwZLMERKtDWQO9L/view?usp=sharing)
+![foxdemo](/Sin título.png)
 
 
 
