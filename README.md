@@ -19,6 +19,7 @@ Python >=  3.0.0
 
 - Pandas
 - Numpy
+- Google Colab
 
 ### Para análisis de datos. 
 
