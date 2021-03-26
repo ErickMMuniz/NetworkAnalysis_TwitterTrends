@@ -32,6 +32,7 @@ Python >=  3.0.0
 - R,Tidyverse
 - Gephi
 
+![foxdemo](https://github.com/foxdemo/foxdemo.github.io/blob/master/assets/images/avatar.png)
 
 
 
