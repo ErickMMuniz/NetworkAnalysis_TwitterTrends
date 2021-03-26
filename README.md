@@ -2,7 +2,7 @@
 
 
 
-### Data
+### Datos / Data
 Los datos se pueden extraer libremente aquí. 
 https://carl.cs.indiana.edu/data/
 
