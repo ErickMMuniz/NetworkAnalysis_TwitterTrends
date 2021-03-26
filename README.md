@@ -1,6 +1,14 @@
-# NetworkAnalysis_TwitterTrends
+# Análisis de tendencias en Twitter: un enfoque de redes. 
 
+## Resumen 
 
+En este trabajo, se presenta una modelación de las tendencias (trends) la cual permite un estudio de las mismas
+en función de la comunidad partícipe. Para ello, se realiza un análisis de datos recabados sobre estas en un periodo
+de tiempo determinado usando herramientas de análisis de redes.
+Los resultados muestran una aparente relación entre el coeficiente de agrupamiento y la entropía de Shannon
+sobre la distribución de grado en las redes estudiadas de comportamiento brusco. Asímismo, a través de un análisis
+estadístico, se corrobora la significancia de enlaces débiles entre los usuarios para ocurrencia de un comportamiento
+explosivo.
 
 ### Datos / Data
 Los datos se pueden extraer libremente aquí. 
