@@ -10,6 +10,30 @@ sobre la distribución de grado en las redes estudiadas de comportamiento brusco
 estadístico, se corrobora la significancia de enlaces débiles entre los usuarios para ocurrencia de un comportamiento
 explosivo.
 
+
+## Paquetería y herramienta usada. 
+
+Python >=  3.0.0
+
+### Para manipulación de los datos.
+
+- Pandas
+- Numpy
+
+### Para análisis de datos. 
+
+- Python, NetworkX.
+- R, regresión lineal.
+
+### Para la generación de gráficas 
+
+- Python,Matplotlib
+- R,Tidyverse
+- Gephi
+
+
+
+
 ### Datos / Data
 Los datos se pueden extraer libremente aquí. 
 https://carl.cs.indiana.edu/data/
