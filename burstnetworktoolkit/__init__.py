@@ -52,4 +52,3 @@ if __name__ == '__main__':
     df_mutual_follow = get_data_followers_and_friends()
 
     array_true_trends = pd.read_csv(path_final_dataframe)[['trend', 'burst']]
-    print("This is a test")
