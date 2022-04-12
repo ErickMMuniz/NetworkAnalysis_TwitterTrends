@@ -32,7 +32,7 @@ Python >=  3.0.0
 - R,Tidyverse
 - Gephi
 
-![foxdemo](/images/Sin%20título.png)
+![foxdemo](/latex/source/images/images/Sin%20título.png)
 
 
 

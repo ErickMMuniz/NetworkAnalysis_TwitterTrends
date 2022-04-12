@@ -8,3 +8,4 @@ data_trend_time.zip
 
 #Ignore test scripts.
 test.py
+out/
