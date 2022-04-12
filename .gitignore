@@ -1,2 +1,11 @@
+# Para eviutar problemas con terceros
 ownpapers/
+
+#Data. ( Se redirecciona a los papers)
+data/
 data_trend_time.zip
+.idea
+
+#Ignore test scripts.
+test.py
+out/
