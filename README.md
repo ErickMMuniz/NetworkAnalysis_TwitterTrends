@@ -1,53 +1,53 @@
-# Análisis de tendencias en Twitter: un enfoque de redes. 
+# Redes complejas: Dinámica del comportamiento explosivo en tendencias de Twitter. 
+
+---
 
 ## Resumen 
 
-En este trabajo, se presenta una modelación de las tendencias (trends) la cual permite un estudio de las mismas
-en función de la comunidad partícipe. Para ello, se realiza un análisis de datos recabados sobre estas en un periodo
-de tiempo determinado usando herramientas de análisis de redes.
-Los resultados muestran una aparente relación entre el coeficiente de agrupamiento y la entropía de Shannon
-sobre la distribución de grado en las redes estudiadas de comportamiento brusco. Asímismo, a través de un análisis
-estadístico, se corrobora la significancia de enlaces débiles entre los usuarios para ocurrencia de un comportamiento
-explosivo.
+La comunicación es un fenómeno complejo desarrollado entre seres humanos. Este fenómeno nace de la necesidad del ser humano por un intercambio de ideas u opiniones. Debido al avance tecnológico, la comunicación ha optimizado su efectividad entre tiempos de respuesta y alcance entre personas.  Como consecuencia de la dinámica social, existen patrones de comunicación que se verán reflejados en estos nuevos medios tecnológicos. Uno de estos es el comportamiento explosivo: una alta interacción de ideas en cortos periodos de tiempo. El estudio de este fenómeno es importante debido a que tiene repercusiones políticas, sociales y hasta económicas. 
+
+En este trabajo, se analizarán diversas redes sociales donde los nodos serán usuarios que interactuaron y los enlaces es la relación de seguimiento mutuo. Por cada tendencia o tema en la base de datos, se generarán redes temporales para caracterizar diversos patrones entre aquellas tendencias que tiene un comportamiento explosivo. Por tanto, el **objetivo principal** es determinar tendencias con comportamiento explosivo en función de métricas de centralidad y de redes sociales. 
 
 
-## Paquetería y herramienta usada. 
+## Herramientas de trabajo.
 
-Python >=  3.0.0
-
-### Para manipulación de los datos.
-
-- Pandas
-- Numpy
-- Google Colab
-
-### Para análisis de datos. 
-
-- Python, NetworkX.
-- R, regresión lineal.
-
-### Para la generación de gráficas 
-
-- Python,Matplotlib
-- R,Tidyverse
-- Gephi
-
-![foxdemo](/latex/source/images/images/Sin%20título.png)
+- Calculos
+  - Python
+  - R
+  - Gephi 
+  - Google Colab
 
 
 
-### Datos / Data
-Los datos se pueden extraer libremente aquí. 
-https://carl.cs.indiana.edu/data/
 
-Artículos asociados
-Weng, L., Menczer, F. & Ahn, Y. Virality Prediction and Community Structure in Social Networks. Sci Rep 3, 2522 (2013). https://doi.org/10.1038/srep02522
 
-@misc{weng2014predicting,
-      title={Predicting Successful Memes using Network and Community Structure}, 
-      author={Lilian Weng and Filippo Menczer and Yong-Yeol Ahn},
-      year={2014},
-      eprint={1403.6199},
-      archivePrefix={arXiv},
-      primaryClass={cs.SI}
+
+### Datos
+
+La base de datos fue recabada por el Centro de Investigación de Redes y Sistemas Complejos [(CNetS)](https://cnets.indiana.edu/). Estos datos son una recopilación de varios tweets con su respectivo usuario autor, tema asociado (tendencia) y tiempo en el cual la acción fue realizada.   Además, se cuenta con una lista de enlaces entre usuarios autores que es la relación de seguimiento mutuo. El periodo de tiempo donde se recabaron los datos fue del 24 de marzo de 2012 al 25 de abril de 2012. Por privacidad de la información, todos los usuarios tienen una identificación diferente a su usuario real.  
+
+Con lo anterior, se puede generar diversas redes temporales, una por cada tendencia, indexadas en un periodo de tiempo de una hora para determinar un patrón en la interacción entre usuarios. Dando importancia en analizar la red inducida, que es aquella red generada por una lista de nodos, por aquellos nodos que iniciaron la comunicación de la tendencia. 
+
+
+```latex
+@inproceedings{weng2014predicting,
+  title={Predicting successful memes using network and community structure},
+  author={Weng, Lilian and Menczer, Filippo and Ahn, Yong-Yeol},
+  booktitle={Eighth international AAAI conference on weblogs and social media},
+  year={2014}
 }
+```
+
+```latex
+@article{weng2013virality,
+  title={Virality prediction and community structure in social networks},
+  author={Weng, Lilian and Menczer, Filippo and Ahn, Yong-Yeol},
+  journal={Scientific reports},
+  volume={3},
+  number={1},
+  pages={1--6},
+  year={2013},
+  publisher={Nature Publishing Group}
+}
+```
+
