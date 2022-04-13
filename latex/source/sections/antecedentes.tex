@@ -1,0 +1,29 @@
+%! Author = mumoe
+%! Date = 4/13/2022
+
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\onehalfspacing
+
+La bibliografía muestra que los primeros estudios sobre la dinámica de poblaciones se basan en sistemas dinámicos no lineales [\cite{Dimitrova2000,MT_MAY, royanderson1992}]. Estos primeros modelos se fundamentan en la noción de estados. Por ejemplo,  en el modelo SIR los estados son \textit{suceptibles}, \textit{infectados} y \textit{recuperados} [\cite{royanderson1992}]; en otro ejemplo de migración, pueden representar localidades, estados o naciones [\cite{Dimitrova2000,MT_MAY,Olsson1965}]. El término \textit{no lineal} realza la necesidad de que dichos estados tienen una relación entre ellos mismos; no se espera que la interacción entre la  población del sistema sea homogénea y constante a través del tiempo [\cite{Barabsi2005}]. Sin embargo, sobre estos estados se asume que la relaciones internas (entre los agentes del sistema) es homogénea.
+
+
+
+Si bien las modelaciones antes mencionadas han logrado obtener propiedades asintóticas interesantes a través del análisis de bifurcaciones del estado fase [\cite{Dimitrova2000}]; desafortunadamente fallan cuando se aplica un mismo modelo a otra población con aparentes similitudes. Varios supuestos son olvidados; en particular, no todas las comunidades, ni los individuos pertenecientes a ellas, tienen el mismo comportamiento [\cite{Keeling2005}]. Esto último como consecuencia de diversos problemas actuales que implican hacer eficiente el uso de los recursos limitados [\cite{Barabsi2005}].
+
+La relación entre estos modelos y la dinámica de las \RMS, enfocados en el objetivo de este proyecto (véase la introducción), es directa considerando a los estados como estados binarios (activo o inactivo). Este pensar ha llevado a algunos realizar distintos análisis estadísticos [\cite{an_Twitter_Zubiaga2014}] y de sistemas no lineales [\cite{an_Twitter_dinamics}] acarreando la problemática del párrafo anterior.
+
+Indagar en este problema dedicado a la topología del sistema es posible debido a los avances tecnológicos actuales donde se conoce un camino preciso de la información [\cite{Miller2011}]. Entonces, se puede aplicar la metodología aplicada de redes debido al conocimiento explícito de la dinámica.
+
+De forma particular, la literatura con mayor especialización del comportamiento explosivo, engloba varios enfoques sobre la topología de la red generada por lo comunicantes. En primer lugar, de los artículos de Strogatz y Watts, así como el artículo de Newman  y  Girvan, nos presentan modelos teóricos que abarcan un coeficiente de agrupamiento y modularidad necesarios para obtener una transmisión efectiva [\cite{Watts1998,Nematzadeh2014}] con menor costo de relaciones; donde se concluye una agrupación necesaria de los comunicantes. En consecuencia, debido a que la agrupación sólo es posible a través de triangulaciones (véase la sobre ;a métrica clustering en el marco teórico), nacen intuiciones sobre la existencia de aristas puente en la red.
+Se ha mostrado que el comportamiento explosivo proviene de un ataque coordinado entre varios iniciadores de distintas comunidades [\cite{D_weng2014predicting,D_Weng2013, Lerman2016}]. Sin embargo, estas últimas modelaciones se basan de una construcción local a una primera vecindad. Aunado a esto último, también es necesaria la interacción de costo mínimo ( por ejemplo los \textit{retweets}) para que el comportamiento sea explosivo  [\cite{Model_Fabrega_regresion,Model_retweets_inproceedings}]. Esto último, como una consecuencia directa del limitado tiempo que tiene cada usuario [\cite{Miritello2013}].
+
+\end{document}
+
+
+ Pues, por lo antes discutido, estos sistemas son  complejos debido  a que la interacción de los usuarios está gobernada por las leyes de la interacción social: los usuarios o agentes no tienen un  líder que guíe a los demás [\cite{Miritello2013}]. Aunado a ello, sin importar el sistema a estudiar, cada usuario cuenta con la liberta de utilizar su recurso del tiempo [\cite{Miritello2013}].
+
+
+ ; aquí obtenemos un umbral para el agrupamiento de los comunicantes

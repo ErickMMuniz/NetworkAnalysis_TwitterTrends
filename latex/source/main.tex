@@ -2,24 +2,177 @@
 %! Date = 4/9/2022
 
 % Preamble
-\documentclass[11pt]{article}
 
+\documentclass[letterpaper,spanish,12pt]{report}
+\usepackage[top=1in, left=1.25in, right=1.25in, bottom=1in]{geometry} % Tamaño de papel y margen
 % Packages
+
+\usepackage{titlesec} % Quita palabra «Capítulo» de \chapter
+\titleformat{\chapter} % Config titlesec
+	{\Large\bfseries}	%
+	{\huge \thechapter}	%
+	{20pt}				%
+	{\huge}				%
+
 \usepackage{amsmath}
 \usepackage{todonotes}
+\usepackage{graphicx}
 \usepackage{subfiles}
 %Para compilar foitnspec, debe ir compilado con XeLatex
 \usepackage{fontspec}
 %Debes instalar Alegreya
 %
 \setmainfont[Mapping=tex-text-ms]{Alegreya}
-\usepackage{styles/portadaTesis}
+
+\usepackage{hyperref}
+
+
+\usepackage[titletoc]{appendix} % Añade palabra «Apéndice» en Índice y define el ambiente appendices
+%\usepackage[T1]{fontenc} % Elimina advertencia Package spanish Warning: Replacing `OT1/cmr/bx/sc'
+\usepackage[mathletters]{ucs} % Unicode char; escribir directo caracteres griegos en Mathmode.
+% Es muy útil para aquellos que necesitan escribir varios caracteres griegos y se quieren evitar escribir cada vez \alpha \beta \gamma etc. Particularmente si tienen mapeado el teclado griego que en general se acomoda fonéticamente a QWERTY i.e. a=α b=β p=π m=μ r=ρ D=∆ d=δ
+\usepackage{textgreek} % para usar caracteres griegos en mmacells (Entrada de código de Mathematica)
+%\usepackage[utf8x]{inputenc} % Escribir con tildes
+\usepackage[es-tabla,es-nodecimaldot]{babel} % es-nodecimaldot es para usar punto como separador decimal en lugar de coma
+
+
+\usepackage{styles/mmacells} % Mathematica Code Input
+% En genera para otros lenguajes de programación el paquete listings es ideal.
+\mmaSet{ % Revisar la documentación de mmaCells
+  moredefined={
+  UnitConvert,
+  diode, cavity,
+  experimentalData,
+  rDB, nAir}
+}
+
+%Secciones y su configuración
+
+%\titleformat{\chapter} % Config titlesec
+%	{\Large\bfseries}	%
+%	{\huge \thechapter}	%
+%	{20pt}				%
+%	{\huge}				%
+\usepackage{styles/portadaTesis} % Portada de la tesus
+
+\usepackage{cite}
+
+\usepackage{amsmath}
+%\DeclareMathOperator{\sinc}{sinc}
+\usepackage{rotating}
+\newsavebox{\savefig}
+\usepackage{multirow}
+%\usepackage{nicefrac}
+\usepackage{graphicx}
+
+\usepackage{caption}
+\captionsetup{font=small} % Tamaño fuente 10pt en caption
+\usepackage{cleveref}
+
+
+%------------------------------------------
+% PORTADA
+%------------------------------------------
+\author{Erick Muñiz Morales}
+\title{Redes complejas: Dinámica del comportamiento explosivo en tendencias de Twitter. }
+
+\faculty{Facultad de Ciencias}
+\degree{Matemático Aplicado}
+\supervisor{Dra. Bibiana Obregón Quintana}
+\cityandyear{Ciudad Universitaria, CDMX, 2022}
+\logouni{images/Escudo-UNAM} % nombre del archivo del escudo de la universidad
+\logofac{images/Escudo-FCIENCIAS} % nombre del archivo del escudo de la facultad
+
+
+%\graphicspath{{diagramas/}{fotos/}{graficas/}}% Usar gráficos de esas carpetas sin necesidad de poner el directorio completo (salvo que tengan terminación *.tex)
 
 % Document
 \begin{document}
     \maketitle
-    Aqui podemos hablar de lo bonito \todo[fancyline]{Debemos de cambiar el paradgiam aquí.} que es escribir.
-    qweqweqweqwe
 
-    \subfile{sections/introduction.tex}
+    \tableofcontents
+
+    \chapter*{Introducción}
+
+    \addcontentsline{toc}{chapter}{Introducción}
+    \subfile{sections/introduccion.tex}
+
+    \chapter{Antecedentes}
+    \subfile{sections/antecedentes.tex}
+
+    \chapter{Marco Teórico}
+    \subfile{sections/marcoteorico}
+
+    \chapter{Metodología}
+    \subfile{sections/metodologia}
+
+    \chapter{Análisis y Resultados}
+    \subfile{sections/resultados}
+
+%    \chapter*{Conclusiones}
+%    \addcontentsline{toc}{chaapter}{Conclusiones}
+%    \subfile{capitulos/conclusiones}
+%
+%    \chapter*{Trabajo futuro}
+%    \addcontentsline{toc}{chapter}{Trabajo futuro}
+%    \subfile{capitulos/trabajofuturo}
+}
 \end{document}
+
+
+%\maketitle % Crea portada
+%%\onehalfspacing
+%
+%
+%
+%%------------------------------------------
+%% CUERPO DE LA TESIS
+%%------------------------------------------
+%\chapter*{Introducción}
+%
+%\addcontentsline{toc}{chapter}{Introducción}
+%\subfile{capitulos/introduccion}
+%
+%\chapter{Antecedentes}
+%\subfile{capitulos/antecedentes}
+%
+%\chapter{Marco Teórico}
+%\subfile{capitulos/marcoteorico}
+%
+%\chapter{Metodología}
+%\subfile{capitulos/metodologia}
+%
+%
+%\chapter{Análisis y Resultados}
+%\subfile{capitulos/resultados}
+%
+%
+%
+%
+%\chapter*{Conclusiones}
+%\addcontentsline{toc}{chaapter}{Conclusiones}
+%\subfile{capitulos/conclusiones}
+%
+%\chapter*{Trabajo futuro}
+%\addcontentsline{toc}{chapter}{Trabajo futuro}
+%\subfile{capitulos/trabajofuturo}
+%
+%%------------------------------------------
+%% APENDICES
+%%------------------------------------------
+%% \begin{appendices}
+%% \appendix
+%
+%% \chapter{Ecuaciones y diagramas con Tikz}
+%% \subfile{apendices/example_tikz}
+%
+%% \chapter{Ejemplo código Mathematica}
+%% \subfile{apendices/mathematica_code}
+%
+%% \end{appendices}
+%%------------------------------------------
+%% BIBLIOGRAFIA
+%%------------------------------------------
+%\bibliographystyle{apalike}
+%\addcontentsline{toc}{chapter}{Referencias}
+%\bibliography{biblio.bib}
