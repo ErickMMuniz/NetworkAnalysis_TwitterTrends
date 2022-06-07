@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import os
 from builtins import open
+from burstkit.util.User import User
 
 DATA_PATH = os.path.join("data", "virality2013.tar")
 
@@ -38,27 +39,42 @@ def read_file_space_separated(
 def parse_string_to_trend_and_timestamp_and_uid(
     detailed_string: "str",
 ) -> "(str, list[str])":
-    #TODO: INCORPORATE INT AND TIME STAMP VALUES
     spliited_string = detailed_string.split()
     return spliited_string[0], spliited_string[1:]
 
+def single_split_string_to_timestamp_uid(timestamp_user: "str") -> "tuple[Timestamp,np.int16]":
+    split_by_comma: "list[str]" = timestamp_user.split(",")
+    timestamp = pd.to_datetime(split_by_comma[0], unit = 's')
+    uid = np.int16(split_by_comma[1])
+    return timestamp, uid
+
+def split_timestamp_user(timestamp_uid: "list[str]") -> "list[tuple[Timestamp,np.int16]]":
+    return list(map( single_split_string_to_timestamp_uid, timestamp_uid))
+
+
+def transform_tuple_trend_and_timestamp_uid(trend_ts_uid: "tuple[str, list[str]]" ) -> "tuple[str, list[tuple[Timestamp,np.int16]]]":
+    trend_name = trend_ts_uid[0]
+    timeline_users: "list[str]" = trend_ts_uid[1]
+    transformed_timeline = split_timestamp_user(timeline_users)
+    return trend_name,transformed_timeline
+
 
 def read_file_each_line_different_length(path_file: "str", limit_rows: "int" = None):
-    file = dict(
+    file = dict(map(transform_tuple_trend_and_timestamp_uid,list(
         map(
             parse_string_to_trend_and_timestamp_and_uid,
             open(path_file, "r", encoding="utf8").readlines(limit_rows),
         )
-    )
+    )))
     return file
 
 
-def get_mutual_followers() -> "pd.DataFrame":
-    return read_file_space_separated(PATH_MUTUAL_FOLLOWER_DAT)
+def get_mutual_followers(limit_rows = None) -> "pd.DataFrame":
+    return read_file_space_separated(PATH_MUTUAL_FOLLOWER_DAT, limit_rows= limit_rows if limit_rows is not None else None, is_edge_list= True)
 
 
-def get_timeline_tweets():
-    return read_file_each_line_different_length(PATH_TIMELINE_TWEETS)
+def get_timeline_tweets(limit_rows = None):
+    return read_file_each_line_different_length(PATH_TIMELINE_TWEETS, limit_rows= limit_rows if limit_rows is not None else None)
 
 
 def get_timeline_retweets():
