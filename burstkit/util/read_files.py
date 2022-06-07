@@ -31,8 +31,15 @@ def read_file_space_separated(
         sep=" ",
         nrows=limit_rows,
         names=["source", "target"] if is_edge_list else None,
-        dtype= {"source": np.int16, "target": np.int16} if is_edge_list else None
+        dtype={"source": np.int, "target": np.int} if is_edge_list else None,
     )
+    if is_edge_list:
+        assert (
+            data["source"].dtypes == "int"
+        ), "[ERROR][DFDataTypes] There are some users with uid like string"
+        assert (
+            data["target"].dtypes == "int"
+        ), "[ERROR][DFDataTypes] There are some users with uid like string"
     return data
 
 
@@ -42,47 +49,139 @@ def parse_string_to_trend_and_timestamp_and_uid(
     spliited_string = detailed_string.split()
     return spliited_string[0], spliited_string[1:]
 
-def single_split_string_to_timestamp_uid(timestamp_user: "str") -> "tuple[Timestamp,np.int16]":
+
+def parse_string_to_trend_and_timestamp_and_uid_edge(
+    detailed_string: "str",
+) -> "(str, list[str])":
+    spliited_string = detailed_string.split()
+    return spliited_string[0], spliited_string[1:]
+
+
+def single_split_string_to_timestamp_uid(
+    timestamp_user: "str",
+) -> "tuple[Timestamp,np.int]":
     split_by_comma: "list[str]" = timestamp_user.split(",")
-    timestamp = pd.to_datetime(split_by_comma[0], unit = 's')
-    uid = np.int16(split_by_comma[1])
+    timestamp = pd.to_datetime(split_by_comma[0], unit="s")
+    uid = np.int(split_by_comma[1])
+    assert isinstance(uid, int) or isinstance(
+        uid, np.int
+    ), "[ERROR][DFDataTypes] There are some users with uid like string"
     return timestamp, uid
 
-def split_timestamp_user(timestamp_uid: "list[str]") -> "list[tuple[Timestamp,np.int16]]":
-    return list(map( single_split_string_to_timestamp_uid, timestamp_uid))
+
+def split_timestamp_user(timestamp_uid: "list[str]") -> "list[tuple[Timestamp,np.int]]":
+    return list(map(single_split_string_to_timestamp_uid, timestamp_uid))
 
 
-def transform_tuple_trend_and_timestamp_uid(trend_ts_uid: "tuple[str, list[str]]" ) -> "tuple[str, list[tuple[Timestamp,np.int16]]]":
+def transform_tuple_trend_and_timestamp_uid(
+    trend_ts_uid: "tuple[str, list[str]]",
+) -> "tuple[str, list[tuple[Timestamp,np.int]]]":
     trend_name = trend_ts_uid[0]
     timeline_users: "list[str]" = trend_ts_uid[1]
     transformed_timeline = split_timestamp_user(timeline_users)
-    return trend_name,transformed_timeline
+    return trend_name, transformed_timeline
 
 
-def read_file_each_line_different_length(path_file: "str", limit_rows: "int" = None):
-    file = dict(map(transform_tuple_trend_and_timestamp_uid,list(
+def read_file_each_line_different_length(
+    path_file: "str", limit_rows: "int" = None
+) -> " dict[str, list[tuple[Timestamp, int | int]]]":
+    file = dict(
         map(
-            parse_string_to_trend_and_timestamp_and_uid,
-            open(path_file, "r", encoding="utf8").readlines(limit_rows),
+            transform_tuple_trend_and_timestamp_uid,
+            list(
+                map(
+                    parse_string_to_trend_and_timestamp_and_uid,
+                    open(path_file, "r", encoding="utf8").readlines(limit_rows),
+                )
+            ),
         )
-    )))
+    )
     return file
 
 
-def get_mutual_followers(limit_rows = None) -> "pd.DataFrame":
-    return read_file_space_separated(PATH_MUTUAL_FOLLOWER_DAT, limit_rows= limit_rows if limit_rows is not None else None, is_edge_list= True)
+def single_split_string_to_timestamp_uid_fromuid(
+    timestamp_user: "str",
+) -> "tuple[Timestamp,np.int,np.int]":
+
+    split_by_comma: "list[str]" = timestamp_user.split(",")
+    timestamp = pd.to_datetime(split_by_comma[0], unit="s")
+    uid_target = np.int(split_by_comma[1])
+    uid_source = np.int(split_by_comma[2])
+
+    assert isinstance(uid_source, int) or isinstance(
+        uid_source, np.int
+    ), "[ERROR][DFDataTypes] There are some users with uid like string"
+    assert isinstance(uid_target, int) or isinstance(
+        uid_target, np.int
+    ), "[ERROR][DFDataTypes] There are some users with uid like string"
+
+    return timestamp, uid_source, uid_target
 
 
-def get_timeline_tweets(limit_rows = None):
-    return read_file_each_line_different_length(PATH_TIMELINE_TWEETS, limit_rows= limit_rows if limit_rows is not None else None)
+def split_timestamp_user_edge(
+    timestamp_uid: "list[str]",
+) -> "list[tuple[Timestamp,np.int, np.int]]":
+    return list(map(single_split_string_to_timestamp_uid_fromuid, timestamp_uid))
 
 
-def get_timeline_retweets():
-    return read_file_each_line_different_length(PATH_TIMELINE_RETWEETS)
+def transform_tuple_trend_and_timestamp_egde_uid(
+    trend_ts_uid: "tuple[str, list[str]]",
+) -> "tuple[str, list[tuple[Timestamp,np.int, np.int]]]":
+    """
+    For convention
+                        Source     Target
+    (uid, from_uid) -> (from_uid -> uid)
+    """
+    trend_name = trend_ts_uid[0]
+    timeline_users: "list[str]" = trend_ts_uid[1]
+    transformed_timeline = split_timestamp_user_edge(timeline_users)
+    return trend_name, transformed_timeline
 
 
-def get_timeline_mentions():
-    return read_file_each_line_different_length(PATH_TIMELINE_MENTIONS)
+def read_file_each_line_different_length_and_double_user(
+    path_file: "str", limit_rows: "int" = None
+) -> "dict[str, list[tuple[Timestamp, int , int ]]]":
+    file = dict(
+        map(
+            transform_tuple_trend_and_timestamp_egde_uid,
+            list(
+                map(
+                    parse_string_to_trend_and_timestamp_and_uid_edge,
+                    open(path_file, "r", encoding="utf8").readlines(limit_rows),
+                )
+            ),
+        )
+    )
+    return file
+
+
+def get_mutual_followers(limit_rows=None) -> "pd.DataFrame":
+    return read_file_space_separated(
+        PATH_MUTUAL_FOLLOWER_DAT,
+        limit_rows=limit_rows if limit_rows is not None else None,
+        is_edge_list=True,
+    )
+
+
+def get_timeline_tweets(limit_rows=None):
+    return read_file_each_line_different_length(
+        PATH_TIMELINE_TWEETS, limit_rows=limit_rows if limit_rows is not None else None
+    )
+
+
+# Contención es uid <- uid
+def get_timeline_retweets(limit_rows=None):
+    return read_file_each_line_different_length_and_double_user(
+        PATH_TIMELINE_RETWEETS,
+        limit_rows=limit_rows if limit_rows is not None else None,
+    )
+
+
+def get_timeline_mentions(limit_rows=None):
+    return read_file_each_line_different_length(
+        PATH_TIMELINE_MENTIONS,
+        limit_rows=limit_rows if limit_rows is not None else None,
+    )
 
 
 if __name__ == "__main__":

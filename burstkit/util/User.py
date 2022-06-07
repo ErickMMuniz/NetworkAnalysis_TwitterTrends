@@ -4,7 +4,9 @@ from builtins import isinstance
 
 class User(object):
     def __init__(self, uid: "int"):
-        assert isinstance(uid, np.int16) or isinstance(uid, int), "[WARNING] The value {uid} is not a int."
+        assert isinstance(uid, np.int16) or isinstance(
+            uid, int
+        ), "[WARNING] The value {uid} is not a int."
         self.uid = uid
 
     def __eq__(self, other: "User"):
