@@ -117,11 +117,34 @@ def single_split_string_to_timestamp_uid_fromuid(
 
     return timestamp, uid_source, uid_target
 
+def single_split_string_to_timestamp_fromuid_uid(
+    timestamp_user: "str",
+) -> "tuple[Timestamp,np.int,np.int]":
+
+    split_by_comma: "list[str]" = timestamp_user.split(",")
+    timestamp = pd.to_datetime(split_by_comma[0], unit="s")
+    uid_source = np.int(split_by_comma[1])
+    uid_target = np.int(split_by_comma[2])
+
+    assert isinstance(uid_source, int) or isinstance(
+        uid_source, np.int
+    ), "[ERROR][DFDataTypes] There are some users with uid like string"
+    assert isinstance(uid_target, int) or isinstance(
+        uid_target, np.int
+    ), "[ERROR][DFDataTypes] There are some users with uid like string"
+
+    return timestamp, uid_source, uid_target
+
 
 def split_timestamp_user_edge(
     timestamp_uid: "list[str]",
 ) -> "list[tuple[Timestamp,np.int, np.int]]":
     return list(map(single_split_string_to_timestamp_uid_fromuid, timestamp_uid))
+
+def split_timestamp_user_edge_mentions(
+    timestamp_uid: "list[str]",
+) -> "list[tuple[Timestamp,np.int, np.int]]":
+    return list(map(single_split_string_to_timestamp_fromuid_uid, timestamp_uid))
 
 
 def transform_tuple_trend_and_timestamp_egde_uid(
@@ -138,12 +161,47 @@ def transform_tuple_trend_and_timestamp_egde_uid(
     return trend_name, transformed_timeline
 
 
+def transform_tuple_trend_and_timestamp_egde_uid_mentions(
+    trend_ts_uid: "tuple[str, list[str]]",
+) -> "tuple[str, list[tuple[Timestamp,np.int, np.int]]]":
+    """
+    For convention
+                        Source     Target
+    (from_uid, uid) -> (from_uid -> uid)
+    """
+    trend_name = trend_ts_uid[0]
+    timeline_users: "list[str]" = trend_ts_uid[1]
+    transformed_timeline = split_timestamp_user_edge_mentions(timeline_users)
+    return trend_name, transformed_timeline
+
+
 def read_file_each_line_different_length_and_double_user(
     path_file: "str", limit_rows: "int" = None
 ) -> "dict[str, list[tuple[Timestamp, int , int ]]]":
     file = dict(
         map(
             transform_tuple_trend_and_timestamp_egde_uid,
+            list(
+                map(
+                    parse_string_to_trend_and_timestamp_and_uid_edge,
+                    open(path_file, "r", encoding="utf8").readlines(limit_rows),
+                )
+            ),
+        )
+    )
+    return file
+
+def read_file_each_line_different_length_and_double_user_mention(
+    path_file: "str", limit_rows: "int" = None
+) -> "dict[str, list[tuple[Timestamp, int , int ]]]":
+    """
+    Disclaimer: This is the same function, but inverse the order of nodes.
+
+
+    """
+    file = dict(
+        map(
+            transform_tuple_trend_and_timestamp_egde_uid_mentions,
             list(
                 map(
                     parse_string_to_trend_and_timestamp_and_uid_edge,
@@ -178,7 +236,7 @@ def get_timeline_retweets(limit_rows=None):
 
 
 def get_timeline_mentions(limit_rows=None):
-    return read_file_each_line_different_length(
+    return read_file_each_line_different_length_and_double_user_mention(
         PATH_TIMELINE_MENTIONS,
         limit_rows=limit_rows if limit_rows is not None else None,
     )
