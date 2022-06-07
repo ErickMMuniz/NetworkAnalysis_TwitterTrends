@@ -9,6 +9,7 @@ data_trend_time.zip
 #Ignore test scripts.
 test.py
 out/
+__pycache__
 
 latex/source/main.log
 latex/source/main.aux
