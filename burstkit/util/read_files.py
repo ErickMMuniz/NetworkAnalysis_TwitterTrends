@@ -17,7 +17,7 @@ PATH_TIMELINE_TWEETS = os.path.join(DATA_PATH, "timeline_tag.anony.dat")
 PATH_TIMELINE_RETWEETS = os.path.join(DATA_PATH, "timeline_tag_rt.anony.dat")
 PATH_TIMELINE_MENTIONS = os.path.join(DATA_PATH, "timeline_tag_men.anony.dat")
 
-PATH_COLAB_MUTUAL_FOLLOW_NETWORK_FROM_DRIVE = "/content/drive/MyDrive/tesis/data/mutual_followers_network_with_attributes.gexf"
+PATH_COLAB_MUTUAL_FOLLOW_NETWORK_FROM_DRIVE = "/content/drive/MyDrive/tesis/data/mutual_followers_network_with_attributes.gml"
 
 UID = "uid"
 SOURCE = "source"

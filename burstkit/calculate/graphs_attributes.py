@@ -8,6 +8,8 @@ def calculate_some_metrics_and_return_graph_follower() -> "Graph":
     """
     Metrics:
         - ![core number](https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.core.core_number.html)
+        - ![degree]
+        - ![communitie](https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.community.modularity_max.greedy_modularity_communities.html)
     """
     G = generate_mutual_follow_graph()
 
