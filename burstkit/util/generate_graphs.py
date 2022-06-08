@@ -1,4 +1,4 @@
-from burstkit.util.read_files import *
+from burstkit.util.read_files import SOURCE, TARGET, get_mutual_followers
 import networkx as nx
 
 
