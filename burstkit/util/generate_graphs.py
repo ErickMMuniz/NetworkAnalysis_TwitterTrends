@@ -1,6 +1,9 @@
-from burstkit.util.read_files import SOURCE, TARGET, get_mutual_followers
+from burstkit.util.read_files import get_mutual_followers
 import networkx as nx
 
+#FIXME: HOT FIX
+SOURCE = "source"
+TARGET = "target"
 
 def generate_mutual_follow_graph(limit_rows: "int" = None) -> "nx.Graph":
     edge_df = get_mutual_followers(limit_rows=limit_rows)
