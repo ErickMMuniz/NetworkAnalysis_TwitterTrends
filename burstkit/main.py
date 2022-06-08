@@ -1,5 +1,8 @@
 """
 @author: Erick
 """
+from burstkit.util import SEED
 
-import 
+import numpy as np
+
+np.random.seed(SEED)

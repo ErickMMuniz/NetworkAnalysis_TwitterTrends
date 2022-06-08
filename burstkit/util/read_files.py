@@ -15,6 +15,11 @@ PATH_TIMELINE_TWEETS = os.path.join(DATA_PATH, "timeline_tag.anony.dat")
 PATH_TIMELINE_RETWEETS = os.path.join(DATA_PATH, "timeline_tag_rt.anony.dat")
 PATH_TIMELINE_MENTIONS = os.path.join(DATA_PATH, "timeline_tag_men.anony.dat")
 
+UID = "uid"
+SOURCE = "source"
+TARGET = "target"
+TIMESTAMP = "timestamp"
+
 
 def is_path_file_in_data_path(path_file: "str") -> "bool":
     return path_file.find(DATA_PATH) != -1
@@ -30,15 +35,15 @@ def read_file_space_separated(
         path_file,
         sep=" ",
         nrows=limit_rows,
-        names=["source", "target"] if is_edge_list else None,
-        dtype={"source": np.int, "target": np.int} if is_edge_list else None,
+        names=[SOURCE, TARGET] if is_edge_list else None,
+        dtype={SOURCE: np.int, TARGET: np.int} if is_edge_list else None,
     )
     if is_edge_list:
         assert (
-            data["source"].dtypes == "int"
+            data[SOURCE].dtypes == "int"
         ), "[ERROR][DFDataTypes] There are some users with uid like string"
         assert (
-            data["target"].dtypes == "int"
+            data[TARGET].dtypes == "int"
         ), "[ERROR][DFDataTypes] There are some users with uid like string"
     return data
 
@@ -117,6 +122,7 @@ def single_split_string_to_timestamp_uid_fromuid(
 
     return timestamp, uid_source, uid_target
 
+
 def single_split_string_to_timestamp_fromuid_uid(
     timestamp_user: "str",
 ) -> "tuple[Timestamp,np.int,np.int]":
@@ -140,6 +146,7 @@ def split_timestamp_user_edge(
     timestamp_uid: "list[str]",
 ) -> "list[tuple[Timestamp,np.int, np.int]]":
     return list(map(single_split_string_to_timestamp_uid_fromuid, timestamp_uid))
+
 
 def split_timestamp_user_edge_mentions(
     timestamp_uid: "list[str]",
@@ -191,6 +198,7 @@ def read_file_each_line_different_length_and_double_user(
     )
     return file
 
+
 def read_file_each_line_different_length_and_double_user_mention(
     path_file: "str", limit_rows: "int" = None
 ) -> "dict[str, list[tuple[Timestamp, int , int ]]]":
@@ -227,7 +235,6 @@ def get_timeline_tweets(limit_rows=None):
     )
 
 
-# Contención es uid <- uid
 def get_timeline_retweets(limit_rows=None):
     return read_file_each_line_different_length_and_double_user(
         PATH_TIMELINE_RETWEETS,
@@ -242,8 +249,45 @@ def get_timeline_mentions(limit_rows=None):
     )
 
 
-if __name__ == "__main__":
-    print(PATH_MUTUAL_FOLLOWER_DAT)
-    read_file_space_separated(
-        PATH_MUTUAL_FOLLOWER_DAT, is_edge_list=True, limit_rows=10
+def get_relation_trend_timeline_tweets(limit_rows=None) -> "dict[str,pd.DataFrame]":
+    trend_timeline: "dict[str, list[tuple[Timestamp, int]]]" = get_timeline_tweets(
+        limit_rows=limit_rows
     )
+    trends = trend_timeline.keys()
+    timeline = map(
+        lambda tl: pd.DataFrame(data=tl, columns=[TIMESTAMP, UID]),
+        trend_timeline.values(),
+    )
+    return dict(zip(trends, timeline))
+
+
+def get_relation_trend_timeline_retweets(limit_rows=None) -> "dict[str,pd.DataFrame]":
+    trend_timeline: "dict[str, list[tuple[Timestamp, int, int]]]" = (
+        get_timeline_retweets(limit_rows=limit_rows)
+    )
+    trends = trend_timeline.keys()
+    timeline = map(
+        lambda tl_stamp: pd.DataFrame(
+            data=tl_stamp, columns=[TIMESTAMP, SOURCE, TARGET]
+        ),
+        trend_timeline.values(),
+    )
+    return dict(zip(trends, timeline))
+
+
+def get_relation_trend_timeline_mentions(limit_rows=None) -> "dict[str,pd.DataFrame]":
+    trend_timeline: "dict[str, list[tuple[Timestamp, int, int]]]" = (
+        get_timeline_mentions(limit_rows=limit_rows)
+    )
+    trends = trend_timeline.keys()
+    timeline = map(
+        lambda tl_stamp: pd.DataFrame(
+            data=tl_stamp, columns=[TIMESTAMP, SOURCE, TARGET]
+        ),
+        trend_timeline.values(),
+    )
+    return dict(zip(trends, timeline))
+
+
+if __name__ == "__main__":
+    pass
