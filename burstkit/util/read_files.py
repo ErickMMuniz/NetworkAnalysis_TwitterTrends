@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 import os
 from builtins import open
+from networkx import Graph, DiGraph
+from networkx import write_gexf
 from burstkit.util.User import User
 
 DATA_PATH = os.path.join("data", "virality2013.tar")
@@ -36,14 +38,14 @@ def read_file_space_separated(
         sep=" ",
         nrows=limit_rows,
         names=[SOURCE, TARGET] if is_edge_list else None,
-        dtype={SOURCE: np.int, TARGET: np.int} if is_edge_list else None,
+        dtype={SOURCE: np.str, TARGET: np.str} if is_edge_list else None,
     )
     if is_edge_list:
         assert (
-            data[SOURCE].dtypes == "int"
+            data[SOURCE].dtypes == "object"
         ), "[ERROR][DFDataTypes] There are some users with uid like string"
         assert (
-            data[TARGET].dtypes == "int"
+            data[TARGET].dtypes == "object"
         ), "[ERROR][DFDataTypes] There are some users with uid like string"
     return data
 
@@ -64,23 +66,23 @@ def parse_string_to_trend_and_timestamp_and_uid_edge(
 
 def single_split_string_to_timestamp_uid(
     timestamp_user: "str",
-) -> "tuple[Timestamp,np.int]":
+) -> "tuple[Timestamp,np.str]":
     split_by_comma: "list[str]" = timestamp_user.split(",")
     timestamp = pd.to_datetime(split_by_comma[0], unit="s")
-    uid = np.int(split_by_comma[1])
-    assert isinstance(uid, int) or isinstance(
-        uid, np.int
+    uid = np.str(split_by_comma[1])
+    assert isinstance(uid, str) or isinstance(
+        uid, np.str
     ), "[ERROR][DFDataTypes] There are some users with uid like string"
     return timestamp, uid
 
 
-def split_timestamp_user(timestamp_uid: "list[str]") -> "list[tuple[Timestamp,np.int]]":
+def split_timestamp_user(timestamp_uid: "list[str]") -> "list[tuple[Timestamp,np.str]]":
     return list(map(single_split_string_to_timestamp_uid, timestamp_uid))
 
 
 def transform_tuple_trend_and_timestamp_uid(
     trend_ts_uid: "tuple[str, list[str]]",
-) -> "tuple[str, list[tuple[Timestamp,np.int]]]":
+) -> "tuple[str, list[tuple[Timestamp,np.str]]]":
     trend_name = trend_ts_uid[0]
     timeline_users: "list[str]" = trend_ts_uid[1]
     transformed_timeline = split_timestamp_user(timeline_users)
@@ -89,7 +91,7 @@ def transform_tuple_trend_and_timestamp_uid(
 
 def read_file_each_line_different_length(
     path_file: "str", limit_rows: "int" = None
-) -> " dict[str, list[tuple[Timestamp, int | int]]]":
+) -> " dict[str, list[tuple[Timestamp, str]]]":
     file = dict(
         map(
             transform_tuple_trend_and_timestamp_uid,
@@ -106,18 +108,18 @@ def read_file_each_line_different_length(
 
 def single_split_string_to_timestamp_uid_fromuid(
     timestamp_user: "str",
-) -> "tuple[Timestamp,np.int,np.int]":
+) -> "tuple[Timestamp,np.str,np.str]":
 
     split_by_comma: "list[str]" = timestamp_user.split(",")
     timestamp = pd.to_datetime(split_by_comma[0], unit="s")
-    uid_target = np.int(split_by_comma[1])
-    uid_source = np.int(split_by_comma[2])
+    uid_target = np.str(split_by_comma[1])
+    uid_source = np.str(split_by_comma[2])
 
-    assert isinstance(uid_source, int) or isinstance(
-        uid_source, np.int
+    assert isinstance(uid_source, str) or isinstance(
+        uid_source, np.str
     ), "[ERROR][DFDataTypes] There are some users with uid like string"
-    assert isinstance(uid_target, int) or isinstance(
-        uid_target, np.int
+    assert isinstance(uid_target, str) or isinstance(
+        uid_target, np.str
     ), "[ERROR][DFDataTypes] There are some users with uid like string"
 
     return timestamp, uid_source, uid_target
@@ -125,18 +127,18 @@ def single_split_string_to_timestamp_uid_fromuid(
 
 def single_split_string_to_timestamp_fromuid_uid(
     timestamp_user: "str",
-) -> "tuple[Timestamp,np.int,np.int]":
+) -> "tuple[Timestamp,np.str,np.str]":
 
     split_by_comma: "list[str]" = timestamp_user.split(",")
     timestamp = pd.to_datetime(split_by_comma[0], unit="s")
-    uid_source = np.int(split_by_comma[1])
-    uid_target = np.int(split_by_comma[2])
+    uid_source = np.str(split_by_comma[1])
+    uid_target = np.str(split_by_comma[2])
 
-    assert isinstance(uid_source, int) or isinstance(
-        uid_source, np.int
+    assert isinstance(uid_source, str) or isinstance(
+        uid_source, np.str
     ), "[ERROR][DFDataTypes] There are some users with uid like string"
-    assert isinstance(uid_target, int) or isinstance(
-        uid_target, np.int
+    assert isinstance(uid_target, str) or isinstance(
+        uid_target, np.str
     ), "[ERROR][DFDataTypes] There are some users with uid like string"
 
     return timestamp, uid_source, uid_target
@@ -144,19 +146,19 @@ def single_split_string_to_timestamp_fromuid_uid(
 
 def split_timestamp_user_edge(
     timestamp_uid: "list[str]",
-) -> "list[tuple[Timestamp,np.int, np.int]]":
+) -> "list[tuple[Timestamp,np.str, np.str]]":
     return list(map(single_split_string_to_timestamp_uid_fromuid, timestamp_uid))
 
 
 def split_timestamp_user_edge_mentions(
     timestamp_uid: "list[str]",
-) -> "list[tuple[Timestamp,np.int, np.int]]":
+) -> "list[tuple[Timestamp,np.str, np.str]]":
     return list(map(single_split_string_to_timestamp_fromuid_uid, timestamp_uid))
 
 
 def transform_tuple_trend_and_timestamp_egde_uid(
     trend_ts_uid: "tuple[str, list[str]]",
-) -> "tuple[str, list[tuple[Timestamp,np.int, np.int]]]":
+) -> "tuple[str, list[tuple[Timestamp,np.str, np.str]]]":
     """
     For convention
                         Source     Target
@@ -170,7 +172,7 @@ def transform_tuple_trend_and_timestamp_egde_uid(
 
 def transform_tuple_trend_and_timestamp_egde_uid_mentions(
     trend_ts_uid: "tuple[str, list[str]]",
-) -> "tuple[str, list[tuple[Timestamp,np.int, np.int]]]":
+) -> "tuple[str, list[tuple[Timestamp,np.str, np.str]]]":
     """
     For convention
                         Source     Target
@@ -184,7 +186,7 @@ def transform_tuple_trend_and_timestamp_egde_uid_mentions(
 
 def read_file_each_line_different_length_and_double_user(
     path_file: "str", limit_rows: "int" = None
-) -> "dict[str, list[tuple[Timestamp, int , int ]]]":
+) -> "dict[str, list[tuple[Timestamp, str , str ]]]":
     file = dict(
         map(
             transform_tuple_trend_and_timestamp_egde_uid,
@@ -201,7 +203,7 @@ def read_file_each_line_different_length_and_double_user(
 
 def read_file_each_line_different_length_and_double_user_mention(
     path_file: "str", limit_rows: "int" = None
-) -> "dict[str, list[tuple[Timestamp, int , int ]]]":
+) -> "dict[str, list[tuple[Timestamp, str , str ]]]":
     """
     Disclaimer: This is the same function, but inverse the order of nodes.
 
@@ -250,7 +252,7 @@ def get_timeline_mentions(limit_rows=None):
 
 
 def get_relation_trend_timeline_tweets(limit_rows=None) -> "dict[str,pd.DataFrame]":
-    trend_timeline: "dict[str, list[tuple[Timestamp, int]]]" = get_timeline_tweets(
+    trend_timeline: "dict[str, list[tuple[Timestamp, str]]]" = get_timeline_tweets(
         limit_rows=limit_rows
     )
     trends = trend_timeline.keys()
@@ -262,7 +264,7 @@ def get_relation_trend_timeline_tweets(limit_rows=None) -> "dict[str,pd.DataFram
 
 
 def get_relation_trend_timeline_retweets(limit_rows=None) -> "dict[str,pd.DataFrame]":
-    trend_timeline: "dict[str, list[tuple[Timestamp, int, int]]]" = (
+    trend_timeline: "dict[str, list[tuple[Timestamp, str, str]]]" = (
         get_timeline_retweets(limit_rows=limit_rows)
     )
     trends = trend_timeline.keys()
@@ -276,7 +278,7 @@ def get_relation_trend_timeline_retweets(limit_rows=None) -> "dict[str,pd.DataFr
 
 
 def get_relation_trend_timeline_mentions(limit_rows=None) -> "dict[str,pd.DataFrame]":
-    trend_timeline: "dict[str, list[tuple[Timestamp, int, int]]]" = (
+    trend_timeline: "dict[str, list[tuple[Timestamp, str, str]]]" = (
         get_timeline_mentions(limit_rows=limit_rows)
     )
     trends = trend_timeline.keys()
@@ -287,6 +289,11 @@ def get_relation_trend_timeline_mentions(limit_rows=None) -> "dict[str,pd.DataFr
         trend_timeline.values(),
     )
     return dict(zip(trends, timeline))
+
+
+def write_network_to_file(G: "Graph | DiGrpah", path_with_file_type : "str") -> None:
+    write_gexf(G= G, path= path_with_file_type)
+
 
 
 if __name__ == "__main__":
