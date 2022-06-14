@@ -6,6 +6,7 @@ from builtins import open
 from networkx import Graph, DiGraph
 from networkx import write_gexf
 from burstkit.util.User import User
+from tqdm import tqdm
 
 DATA_PATH = os.path.join("data", "virality2013.tar")
 
@@ -99,14 +100,20 @@ def read_file_each_line_different_length(
     file = dict(
         map(
             transform_tuple_trend_and_timestamp_uid,
-            filter(
-                lambda trend_list_uid_ts: len(trend_list_uid_ts[1])
-                >= min_number_tweets,
-                list(
-                    map(
-                        parse_string_to_trend_and_timestamp_and_uid,
-                        open(path_file, "r", encoding="utf8").readlines(limit_rows),
-                    )
+            tqdm(
+                filter(
+                    lambda trend_list_uid_ts: len(trend_list_uid_ts[1])
+                    >= min_number_tweets,
+                    list(
+                        map(
+                            parse_string_to_trend_and_timestamp_and_uid,
+                            tqdm(
+                                open(path_file, "r", encoding="utf8").readlines(
+                                    limit_rows
+                                )
+                            ),
+                        )
+                    ),
                 ),
             ),
         )
