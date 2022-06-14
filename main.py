@@ -18,7 +18,7 @@ from burstkit.calculate.graphs_attributes import calculate_some_metrics_and_retu
 
 
 
-TREND_TIMELINE_TWEETS : "dict[str, pd.DataFrame]" = rf.get_relation_trend_timeline_tweets(1000)
+TREND_TIMELINE_TWEETS : "dict[str, pd.DataFrame]" = rf.get_relation_trend_timeline_tweets(1000, min_number_tweets = 100)
 TREND_TIMELINE_RETWEETS : "dict[str, pd.DataFrame]" = rf.get_relation_trend_timeline_retweets(1000)
 TREND_TIMELINE_MENTIONS : "dict[str, pd.DataFrame]" = rf.get_relation_trend_timeline_mentions(1000)
 
@@ -30,4 +30,4 @@ print(next(test))
 trend = list(TREND_TIMELINE_TWEETS.keys())[2]
 df = TREND_TIMELINE_TWEETS[trend]
 print(df.dtypes)
-calculate_some_metrics_and_return_graph_follower()
+#calculate_some_metrics_and_return_graph_follower()

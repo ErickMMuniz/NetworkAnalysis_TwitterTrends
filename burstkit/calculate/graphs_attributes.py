@@ -19,8 +19,3 @@ def calculate_some_metrics_and_return_graph_follower() -> "Graph":
     set_node_attributes(G, core_number_attributes, name="core_number")
 
     return G
-
-
-
-
-

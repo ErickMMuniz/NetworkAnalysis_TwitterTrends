@@ -17,7 +17,9 @@ PATH_TIMELINE_TWEETS = os.path.join(DATA_PATH, "timeline_tag.anony.dat")
 PATH_TIMELINE_RETWEETS = os.path.join(DATA_PATH, "timeline_tag_rt.anony.dat")
 PATH_TIMELINE_MENTIONS = os.path.join(DATA_PATH, "timeline_tag_men.anony.dat")
 
-PATH_COLAB_MUTUAL_FOLLOW_NETWORK_FROM_DRIVE = "/content/drive/MyDrive/tesis/data/mutual_followers_network_with_attributes.gml"
+PATH_COLAB_MUTUAL_FOLLOW_NETWORK_FROM_DRIVE = (
+    "/content/drive/MyDrive/tesis/data/mutual_followers_network_with_attributes.gml"
+)
 
 UID = "uid"
 SOURCE = "source"
@@ -92,16 +94,20 @@ def transform_tuple_trend_and_timestamp_uid(
 
 
 def read_file_each_line_different_length(
-    path_file: "str", limit_rows: "int" = None
+    path_file: "str", limit_rows: "int" = None, min_number_tweets: "Int" = 0
 ) -> " dict[str, list[tuple[Timestamp, str]]]":
     file = dict(
         map(
             transform_tuple_trend_and_timestamp_uid,
-            list(
-                map(
-                    parse_string_to_trend_and_timestamp_and_uid,
-                    open(path_file, "r", encoding="utf8").readlines(limit_rows),
-                )
+            filter(
+                lambda trend_list_uid_ts: len(trend_list_uid_ts[1])
+                >= min_number_tweets,
+                list(
+                    map(
+                        parse_string_to_trend_and_timestamp_and_uid,
+                        open(path_file, "r", encoding="utf8").readlines(limit_rows),
+                    )
+                ),
             ),
         )
     )
@@ -233,9 +239,11 @@ def get_mutual_followers(limit_rows=None) -> "pd.DataFrame":
     )
 
 
-def get_timeline_tweets(limit_rows=None):
+def get_timeline_tweets(limit_rows=None, min_number_tweets=0):
     return read_file_each_line_different_length(
-        PATH_TIMELINE_TWEETS, limit_rows=limit_rows if limit_rows is not None else None
+        PATH_TIMELINE_TWEETS,
+        limit_rows=limit_rows if limit_rows is not None else None,
+        min_number_tweets=min_number_tweets,
     )
 
 
@@ -253,9 +261,11 @@ def get_timeline_mentions(limit_rows=None):
     )
 
 
-def get_relation_trend_timeline_tweets(limit_rows=None) -> "dict[str,pd.DataFrame]":
+def get_relation_trend_timeline_tweets(
+    limit_rows=None, min_number_tweets=0
+) -> "dict[str,pd.DataFrame]":
     trend_timeline: "dict[str, list[tuple[Timestamp, str]]]" = get_timeline_tweets(
-        limit_rows=limit_rows
+        limit_rows=limit_rows, min_number_tweets=min_number_tweets
     )
     trends = trend_timeline.keys()
     timeline = map(
@@ -293,9 +303,8 @@ def get_relation_trend_timeline_mentions(limit_rows=None) -> "dict[str,pd.DataFr
     return dict(zip(trends, timeline))
 
 
-def write_network_to_file(G: "Graph | DiGrpah", path_with_file_type : "str") -> None:
-    write_gexf(G= G, path= path_with_file_type)
-
+def write_network_to_file(G: "Graph | DiGrpah", path_with_file_type: "str") -> None:
+    write_gexf(G=G, path=path_with_file_type)
 
 
 if __name__ == "__main__":
