@@ -1,4 +1,6 @@
-pandas
-numpy
-networkx
-matplotlib
+pandas~=1.4.2
+numpy~=1.22.4
+networkx~=2.8.3
+matplotlib~=3.5.2
+networkit~=10.0
+tqdm~=4.64.0
