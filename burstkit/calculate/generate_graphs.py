@@ -228,7 +228,7 @@ def get_unique_users_from_timeline_to_networkit_in_susseive_way(
     neighbour_nx: "Graph" = nk2nx(neighbour)
 
     if save_path:
-        if path_to_save is not None:
+        if path_to_save is None:
             path = get_path_folder_trend(trend)
         else:
             path = path_to_save
