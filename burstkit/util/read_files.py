@@ -32,6 +32,14 @@ TARGET = "target"
 TIMESTAMP = "timestamp"
 
 
+def get_path_folder_trend(trend: "str") -> "os.path":
+    idmap = pd.read_csv(PATH_INDEX_TREND).to_dict("list")
+    idmap = dict(zip(idmap["trend"], idmap["id_trend"]))
+    # assert idmap in list(idmap.keys()), "Trend not found"
+    id = idmap[trend]
+    return os.path.join(PATH_DATA_NETWORKS_BY_TREND, FOLDER_TREND_ID.format(id))
+
+
 def is_path_file_in_data_path(path_file: "str") -> "bool":
     return path_file.find(DATA_PATH) != -1
 
@@ -323,7 +331,7 @@ def write_network_to_file(G: "Graph | DiGrpah", path_with_file_type: "str") -> N
 def get_timeline_tweets_by_trend(trend: "str") -> "pd.DataFrame":
     idmap = pd.read_csv(PATH_INDEX_TREND).to_dict("list")
     idmap = dict(zip(idmap["trend"], idmap["id_trend"]))
-    #assert idmap in list(idmap.keys()), "Trend not found"
+    # assert idmap in list(idmap.keys()), "Trend not found"
     id = idmap[trend]
 
     path_folder = os.path.join(PATH_DATA_NETWORKS_BY_TREND, FOLDER_TREND_ID.format(id))

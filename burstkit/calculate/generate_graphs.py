@@ -1,3 +1,5 @@
+import os.path
+
 from pandas import DataFrame
 from pandas import read_csv
 from os import mkdir
@@ -9,13 +11,18 @@ from networkit.distance import BidirectionalDijkstra
 from networkit import graphtools
 
 from networkx import Graph
+from networkx import write_gml
 
 from itertools import combinations
 from functools import reduce
 from tqdm import tqdm
 from logging import warning
 
+from burstkit.util.manioulation import generate_pair_until_last_from_array
+from burstkit.util.read_files import get_timeline_tweets_by_trend, get_path_folder_trend
+
 unique_uid_git = []
+
 
 # Necesitamos una función que dado el trend, me des la red generada de los camnios más cortos.
 
@@ -184,9 +191,46 @@ def get_unique_users_from_timeline_to_networkit(
     return union_sets
 
 
+def get_unique_users_from_timeline_to_networkit_in_susseive_way(
+    trend: "str", g: "Graph", git: "networkit_Graph", idmap_g_to_git: "dict[str, int]", save_path: "bool" = False
+) -> "Graph":
+    """Esta función es más eficiente que la anterior, pero solo considera que un tiempo. Un nodo sigue a otro si en el timeline está seguidos."""
+    timeline: "DataFrame" = get_timeline_tweets_by_trend(trend)
+    source_target_raw: "list[(str,str)]" = generate_pair_until_last_from_array(
+        timeline["uid"]
+    )
+    nodes_clean = list(g.nodes())
+    source_target = list(
+        filter(lambda x: x[0] in nodes_clean and x[1] in nodes_clean, source_target_raw)
+    )
+
+    warning("[RUNNING] Calculating shortest path from source to target")
+
+    set_nodes: "list[set[int]]" = list(
+        map(
+            lambda source_target: get_path_nodes(
+                git,
+                map_node_to_uid_git(source_target[0], idmap_g_to_git),
+                map_node_to_uid_git(source_target[1], idmap_g_to_git),
+            ),
+            tqdm(source_target),
+        )
+    )
+    union_sets: "list[int]" = list(reduce(lambda x, y: x.union(y), set_nodes))
+
+    neighbour: "networkit_Graph" = graphtools.subgraphFromNodes(git, union_sets)
+
+    neighbour_nx : "Graph" = nk2nx(neighbour)
+
+    if save_path:
+        path = get_path_folder_trend(trend)
+        write_gml(neighbour_nx, os.path.join(path, "network_neighbour.gml"))
+
+    return neighbour_nx
+
+
 if __name__ == "__main__":
     pass
-
 
 # Git_trend = nx2nk(G_trend)
 
