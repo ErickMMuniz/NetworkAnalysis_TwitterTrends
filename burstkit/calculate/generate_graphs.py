@@ -192,7 +192,12 @@ def get_unique_users_from_timeline_to_networkit(
 
 
 def get_unique_users_from_timeline_to_networkit_in_susseive_way(
-    trend: "str", g: "Graph", git: "networkit_Graph", idmap_g_to_git: "dict[str, int]", save_path: "bool" = False
+    trend: "str",
+    g: "Graph",
+    git: "networkit_Graph",
+    idmap_g_to_git: "dict[str, int]",
+    save_path: "bool" = False,
+    path_to_save: "str" = None,
 ) -> "Graph":
     """Esta función es más eficiente que la anterior, pero solo considera que un tiempo. Un nodo sigue a otro si en el timeline está seguidos."""
     timeline: "DataFrame" = get_timeline_tweets_by_trend(trend)
@@ -220,10 +225,13 @@ def get_unique_users_from_timeline_to_networkit_in_susseive_way(
 
     neighbour: "networkit_Graph" = graphtools.subgraphFromNodes(git, union_sets)
 
-    neighbour_nx : "Graph" = nk2nx(neighbour)
+    neighbour_nx: "Graph" = nk2nx(neighbour)
 
     if save_path:
-        path = get_path_folder_trend(trend)
+        if path_to_save is not None:
+            path = get_path_folder_trend(trend)
+        else:
+            path = path_to_save
         write_gml(neighbour_nx, os.path.join(path, "network_neighbour.gml"))
 
     return neighbour_nx

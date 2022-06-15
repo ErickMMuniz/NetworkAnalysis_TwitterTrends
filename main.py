@@ -8,7 +8,8 @@ import burstkit.util.generate_graphs as gg
 import networkx as nx
 
 from burstkit.calculate.generate_graphs import (
-    get_unique_users_from_timeline_to_networkit, get_unique_users_from_timeline_to_networkit_in_susseive_way,
+    get_unique_users_from_timeline_to_networkit,
+    get_unique_users_from_timeline_to_networkit_in_susseive_way,
 )
 from burstkit.util.User import User
 from pprint import pprint
@@ -18,19 +19,24 @@ from networkit import overview
 
 from tqdm import tqdm
 
+from threading import Thread
+
 # G: "nx.Graph" = gg.generate_mutual_follow_graph(100)
 
 # pprint(G.number_of_nodes())
 
 
-G = generate_mutual_follow_graph()
-Git = nx2nk(G)
+
 
 #
 # TREND_TIMELINE_TWEETS: "dict[str, pd.DataFrame]" = (
 #     rf.get_relation_trend_timeline_tweets(min_number_tweets=4000)
 # )
 #
+
+G = generate_mutual_follow_graph()
+Git = nx2nk(G)
+
 id_map_g_to_git = dict(zip(G.nodes(), range(G.number_of_nodes())))
 id_map_git_to_g = dict(zip(id_map_g_to_git.values(), id_map_g_to_git.keys()))
 
@@ -59,20 +65,51 @@ id_map_git_to_g = dict(zip(id_map_g_to_git.values(), id_map_g_to_git.keys()))
 #         pass
 #
 #     timeline.to_csv(f"{PATH_ROOT_NETWORKS_BY_TREND}\\{FOLDER_NAME}\\tweets_timeline.csv", index=False)
+NAME_FOLDER = "TREND_ID_{}"
+PATH_ROOT_NETWORK_FOLDERS = rf.PATH_DATA_NETWORKS_BY_TREND
+PATH_INDEX_TREND = rf.PATH_INDEX_TREND
+number_threads = 4
+
+def get_path_folder_trend_colab(
+    trend: "str" ) -> "os.path":
+    idmap = pd.read_csv(PATH_INDEX_TREND).to_dict("list")
+    idmap = dict(zip(idmap["trend"], idmap["id_trend"]))
+    # assert idmap in list(idmap.keys()), "Trend not found"
+    id = idmap[trend]
+    return os.path.join(PATH_ROOT_NETWORK_FOLDERS, NAME_FOLDER.format(id))
+
+
+def is_computed_neibours_graph(trend: "str"):
+    path = get_path_folder_trend_colab(trend)
+    return not os.path.exists(os.path.join(path, "network_neighbour.gml"))
+
+def compute_by_thread(i):
+    task_trend = split_trend_null[i]
+    for trend in task_trend:
+        get_unique_users_from_timeline_to_networkit_in_susseive_way(
+            trend=trend,
+            g=G,
+            git=Git,
+            idmap_g_to_git=id_map_g_to_git,
+            save_path=True,
+            path_to_save=PATH_ROOT_NETWORK_FOLDERS,
+        )
 
 
 if __name__ == "__main__":
-    idmap = pd.read_csv(rf.PATH_INDEX_TREND).to_dict("list")
-    for trend in tqdm(idmap["trend"][::-1]):
-        path = rf.get_path_folder_trend(trend)
-        if not os.path.exists(os.path.join(path, "network_neighbour.gml")):
-            print(f"{trend} - No ha sido calculado")
-            get_unique_users_from_timeline_to_networkit_in_susseive_way(trend=trend,
-                                                                        g=G,
-                                                                        git=Git,
-                                                                        idmap_g_to_git=id_map_g_to_git,
-                                                                        save_path=True)
+    index_trends = rf.PATH_INDEX_TREND
+    idmap = pd.read_csv(index_trends).to_dict("list")
+    trends = list(idmap["trend"])
+    trend_null = list(
+        filter(lambda trend_null: is_computed_neibours_graph(trend_null), trends)
+    )
+    split_trend_null = np.array_split(trend_null, number_threads)
+
+    # for trend in tqdm(idmap["trend"][::-1]):
+    #     path = get_path_folder_trend_colab(trend)
+    #     if not os.path.exists(os.path.join(path, "network_neighbour.gml")):
+    #         print(f"{trend} - No ha sido calculado")
     # list_set_int = get_unique_users_from_timeline_to_networkit(
     #     trend = trend, timelines=TREND_TIMELINE_TWEETS, g=G, git=Git, idmap_g_to_git=id_map_g_to_git
     # )
-    print(list_uid)
+    # print(list_uid)
