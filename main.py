@@ -19,15 +19,16 @@ from networkit import overview
 # pprint(G.number_of_nodes())
 
 
-G = generate_mutual_follow_graph()
-Git = nx2nk(G)
+# G = generate_mutual_follow_graph()
+# Git = nx2nk(G)
 
-TREND_TIMELINE_TWEETS: "dict[str, pd.DataFrame]" = (
-    rf.get_relation_trend_timeline_tweets(min_number_tweets=4000)
-)
-
-id_map_g_to_git = dict(zip(G.nodes(), range(G.number_of_nodes())))
-id_map_git_to_g = dict(zip(id_map_g_to_git.values(), id_map_g_to_git.keys()))
+#
+# TREND_TIMELINE_TWEETS: "dict[str, pd.DataFrame]" = (
+#     rf.get_relation_trend_timeline_tweets(min_number_tweets=4000)
+# )
+#
+# id_map_g_to_git = dict(zip(G.nodes(), range(G.number_of_nodes())))
+# id_map_git_to_g = dict(zip(id_map_g_to_git.values(), id_map_g_to_git.keys()))
 
 
 # TREND_TIMELINE_RETWEETS : "dict[str, pd.DataFrame]" = rf.get_relation_trend_timeline_retweets(1000)
@@ -43,18 +44,18 @@ id_map_git_to_g = dict(zip(id_map_g_to_git.values(), id_map_g_to_git.keys()))
 # print(df.dtypes)
 # calculate_some_metrics_and_return_graph_follower()
 
-def save_timeline_line_dataframe(trend: "str"):
-    timeline: "pd.DataFrame" = TREND_TIMELINE_TWEETS[trend]
-    id = map_id_trend[trend]
-
-    FOLDER_NAME = f"TREND_ID_{id}"
-
-    try:
-        mkdir(f"{PATH_ROOT_NETWORKS_BY_TREND}\\{FOLDER_NAME}")
-    except FileExistsError:
-        pass
-
-    timeline.to_csv(f"{PATH_ROOT_NETWORKS_BY_TREND}\\{FOLDER_NAME}\\tweets_timeline.csv", index=False)
+# def save_timeline_line_dataframe(trend: "str"):
+#     timeline: "pd.DataFrame" = TREND_TIMELINE_TWEETS[trend]
+#     id = map_id_trend[trend]
+#
+#     FOLDER_NAME = f"TREND_ID_{id}"
+#
+#     try:
+#         mkdir(f"{PATH_ROOT_NETWORKS_BY_TREND}\\{FOLDER_NAME}")
+#     except FileExistsError:
+#         pass
+#
+#     timeline.to_csv(f"{PATH_ROOT_NETWORKS_BY_TREND}\\{FOLDER_NAME}\\tweets_timeline.csv", index=False)
 
 
 if __name__ == "__main__":

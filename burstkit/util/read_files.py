@@ -22,6 +22,10 @@ PATH_COLAB_MUTUAL_FOLLOW_NETWORK_FROM_DRIVE = (
     "/content/drive/MyDrive/tesis/data/mutual_followers_network_with_attributes.gml"
 )
 
+PATH_DATA_NETWORKS_BY_TREND = os.path.join("data", "networks_by_trend")
+PATH_INDEX_TREND = os.path.join(PATH_DATA_NETWORKS_BY_TREND, "index_trends.csv")
+
+FOLDER_TREND_ID = "TREND_ID_{}"
 UID = "uid"
 SOURCE = "source"
 TARGET = "target"
@@ -314,6 +318,19 @@ def get_relation_trend_timeline_mentions(limit_rows=None) -> "dict[str,pd.DataFr
 
 def write_network_to_file(G: "Graph | DiGrpah", path_with_file_type: "str") -> None:
     write_gexf(G=G, path=path_with_file_type)
+
+
+def get_timeline_tweets_by_trend(trend: "str") -> "pd.DataFrame":
+    idmap = pd.read_csv(PATH_INDEX_TREND).to_dict("list")
+    idmap = dict(zip(idmap["trend"], idmap["id_trend"]))
+    #assert idmap in list(idmap.keys()), "Trend not found"
+    id = idmap[trend]
+
+    path_folder = os.path.join(PATH_DATA_NETWORKS_BY_TREND, FOLDER_TREND_ID.format(id))
+    timeline = pd.read_csv(os.path.join(path_folder, "tweets_timeline.csv"))
+    timeline["timestamp"] = pd.to_datetime(timeline["timestamp"])
+    timeline["uid"] = timeline["uid"].astype(str)
+    return timeline
 
 
 if __name__ == "__main__":

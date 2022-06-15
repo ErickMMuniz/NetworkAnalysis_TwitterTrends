@@ -180,7 +180,7 @@ def get_unique_users_from_timeline_to_networkit(
             tqdm(source_target),
         )
     )
-    union_sets : "list[int]" = list(reduce(lambda x, y: x.union(y), set_nodes))
+    union_sets: "list[int]" = list(reduce(lambda x, y: x.union(y), set_nodes))
     return union_sets
 
 
