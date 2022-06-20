@@ -4,11 +4,15 @@ import pandas as pd
 import os
 from builtins import open
 from networkx import Graph, DiGraph
-from networkx import write_gexf
+from networkx import write_gexf, read_gml
+from networkit.nxadapter import nx2nk
 from burstkit.util.User import User
 from tqdm import tqdm
 
 DATA_PATH = os.path.join("data", "virality2013.tar")
+
+# qwe
+DATA_PATH_DRIVE_FROM_COLAB = os.path.join("content", "drive")
 
 PATH_MUTUAL_FOLLOWER_DAT = os.path.join(DATA_PATH, "follower_gcc.anony.dat")
 PATH_WEIGHT_MENTION_DAT = os.path.join(DATA_PATH, "mention_gcc.anony.dat")
@@ -107,8 +111,8 @@ def transform_tuple_trend_and_timestamp_uid(
 
 
 def read_file_each_line_different_length(
-    path_file: "str", limit_rows: "int" = None, min_number_tweets: "Int" = 0
-) -> " dict[str, list[tuple[Timestamp, str]]]":
+    path_file: "str", limit_rows: "int" = None, min_number_tweets: "int" = 0
+) -> "dict[str, list[tuple[Timestamp, str]]]":
     file = dict(
         map(
             transform_tuple_trend_and_timestamp_uid,
@@ -339,6 +343,33 @@ def get_timeline_tweets_by_trend(trend: "str") -> "pd.DataFrame":
     timeline["timestamp"] = pd.to_datetime(timeline["timestamp"])
     timeline["uid"] = timeline["uid"].astype(str)
     return timeline
+
+
+def get_id_trend_colab(trend: "str", from_colab=False) -> "os.path":
+    if from_colab:
+        idmap = pd.read_csv("/content/data/index_trends.csv").to_dict("list")
+    else:
+        idmap = pd.read_csv(PATH_INDEX_TREND).to_dict("list")
+    idmap = dict(zip(idmap["trend"], idmap["id_trend"]))
+    # assert idmap in list(idmap.keys()), "Trend not found"
+    id_trend = idmap[trend]
+    return id_trend
+
+
+def get_nk_graph_from_file(trend: "str", from_colab=False) -> "Graph":
+    id = get_id_trend_colab(trend, from_colab = from_colab)
+    if from_colab:
+        path_root_folders = os.path.abspath(
+            "/content/drive/MyDrive/tesis/data/networks_by_trend"
+        )
+    else:
+        path_root_folders = PATH_DATA_NETWORKS_BY_TREND
+    path_network = os.path.join(
+        path_root_folders, f"TREND_ID_{id}", "network_neighbour.gml"
+    )
+    g_nx = read_gml(path_network)
+    g_nk = nx2nk(g_nx)
+    return g_nk
 
 
 if __name__ == "__main__":
