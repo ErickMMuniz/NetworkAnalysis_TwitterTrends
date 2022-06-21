@@ -8,6 +8,7 @@ from networkx import write_gexf, read_gml
 from networkit.nxadapter import nx2nk
 from burstkit.util.User import User
 from tqdm import tqdm
+from logging import warning
 
 DATA_PATH = os.path.join("data", "virality2013.tar")
 
@@ -357,7 +358,8 @@ def get_id_trend_colab(trend: "str", from_colab=False) -> "os.path":
 
 
 def get_nk_graph_from_file(trend: "str", from_colab=False) -> "Graph":
-    id = get_id_trend_colab(trend, from_colab = from_colab)
+    id = get_id_trend_colab(trend, from_colab=from_colab)
+    warning("[DEBUG] Writing trend: {} with id -> {}".format(trend, id))
     if from_colab:
         path_root_folders = os.path.abspath(
             "/content/drive/MyDrive/tesis/data/networks_by_trend"
@@ -370,6 +372,39 @@ def get_nk_graph_from_file(trend: "str", from_colab=False) -> "Graph":
     g_nx = read_gml(path_network)
     g_nk = nx2nk(g_nx)
     return g_nk
+
+
+def write_attributes_by_trend(
+    trend: "str", attribute_name: "str", scores: "pd.DataFrame", from_colab=False
+) -> None:
+    id = get_id_trend_colab(trend, from_colab=from_colab)
+    warning("[DEBUG] Writing trend: {} with id -> {}".format(trend, id))
+    if from_colab:
+        path_root_folders = os.path.abspath(
+            "/content/drive/MyDrive/tesis/data/networks_by_trend"
+        )
+    else:
+        path_root_folders = PATH_DATA_NETWORKS_BY_TREND
+    path_folder_trend = os.path.join(path_root_folders, f"TREND_ID_{id}")
+    path_folder_attributes = os.path.join(path_folder_trend, "attributes")
+    try:
+        os.mkdir(path_folder_attributes)
+    except FileExistsError:
+        pass
+
+    path_dataframe = os.path.join(path_folder_attributes, f"{attribute_name}.csv")
+
+    scores.to_csv(path_dataframe, index=False)
+    warning("[DEBUG] Wrote attribute: {}".format(attribute_name))
+
+
+def get_dataframe_trend_to_id(from_colab=False) -> "dict[str, str]":
+    if from_colab:
+        idmap = pd.read_csv("/content/data/index_trends.csv").to_dict("list")
+    else:
+        idmap = pd.read_csv(PATH_INDEX_TREND).to_dict("list")
+    idmap = dict(zip(idmap["trend"], idmap["id_trend"]))
+    return idmap
 
 
 if __name__ == "__main__":
