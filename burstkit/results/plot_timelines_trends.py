@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from pandas import Index
+from tqdm import tqdm
 
 from burstkit.util.read_files import (
     get_dataframe_trend_to_id,
@@ -78,7 +79,7 @@ def centrered_timeline_count_in_maximun_activiy(
 
 def main() -> None:
     trends_by_burst: dict[str, str] = get_dict_trend_burst()
-    for trend in trends_by_burst:
+    for trend in tqdm(trends_by_burst):
         TREND: str = trend
         b = trends_by_burst[TREND]
         timeline: pd.DataFrame = get_timeline_tweets_by_trend(TREND)
@@ -92,7 +93,7 @@ def main() -> None:
         ax.plot(
             timeline_count_centered_in_maximun_activity["count"], color=COLOR_BURST[b]
         )
-        ax.set_xlabel("Time")
+        ax.set_xlabel("Tiempo")
         ax.set_xticklabels(
             list(
                 map(
@@ -103,6 +104,6 @@ def main() -> None:
             rotation=45,
             size=12,
         )
-        ax.set_ylabel("Number of tweets")
-        ax.set_title(f"Timeline of {TREND}")
-        plt.show()
+        ax.set_ylabel("Cantidad de Tweets")
+        ax.set_title(f"#{TREND}")
+        plt.savefig(f"data\\images\\timeline_tweets\\{TREND}.png")
