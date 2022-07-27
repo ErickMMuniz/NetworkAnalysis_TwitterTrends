@@ -28,6 +28,7 @@ PATH_COLAB_MUTUAL_FOLLOW_NETWORK_FROM_DRIVE = (
 )
 
 PATH_DATA_NETWORKS_BY_TREND = os.path.join("data", "networks_by_trend")
+PATH_FINAL_DF = os.path.join("data", "finaldf.csv")
 PATH_INDEX_TREND = os.path.join(PATH_DATA_NETWORKS_BY_TREND, "index_trends.csv")
 
 FOLDER_TREND_ID = "TREND_ID_{}"
@@ -334,6 +335,10 @@ def write_network_to_file(G: "Graph | DiGrpah", path_with_file_type: "str") -> N
 
 
 def get_timeline_tweets_by_trend(trend: "str") -> "pd.DataFrame":
+    """
+    Get the timeline of a trend.
+
+    """
     idmap = pd.read_csv(PATH_INDEX_TREND).to_dict("list")
     idmap = dict(zip(idmap["trend"], idmap["id_trend"]))
     # assert idmap in list(idmap.keys()), "Trend not found"
@@ -346,6 +351,31 @@ def get_timeline_tweets_by_trend(trend: "str") -> "pd.DataFrame":
     return timeline
 
 
+def get_attribute_uidpart_dataframe_by_trend(
+    id_trend: "str", attribute: "str"
+) -> "pd.DataFrame":
+    """
+    Get the timeline of a trend.
+
+    """
+    path_folder = os.path.join(
+        PATH_DATA_NETWORKS_BY_TREND, FOLDER_TREND_ID.format(id_trend)
+    )
+    assert attribute in [
+        "betweenness",
+        "closeness",
+        "degree",
+        "eigenvector",
+        "pagerank",
+        "core_decomposition",
+    ], "Attribute not found"
+    attribute_data_frame = pd.read_csv(
+        os.path.join(path_folder, "attributes", attribute + ".csv")
+    )
+    attribute_data_frame["uid_part"] = attribute_data_frame["uid_part"].astype(str)
+    return attribute_data_frame
+
+
 def get_id_trend_colab(trend: "str", from_colab=False) -> "os.path":
     if from_colab:
         idmap = pd.read_csv("/content/data/index_trends.csv").to_dict("list")
@@ -355,6 +385,10 @@ def get_id_trend_colab(trend: "str", from_colab=False) -> "os.path":
     # assert idmap in list(idmap.keys()), "Trend not found"
     id_trend = idmap[trend]
     return id_trend
+
+
+def get_uid_list_from_networkx(G: "Graph | DiGrpah") -> "list[str]":
+    return list(G.nodes())
 
 
 def get_nk_graph_from_file(trend: "str", from_colab=False) -> "Graph":
@@ -372,6 +406,20 @@ def get_nk_graph_from_file(trend: "str", from_colab=False) -> "Graph":
     g_nx = read_gml(path_network)
     g_nk = nx2nk(g_nx)
     return g_nk
+
+
+def get_nx_graph_from_file(id_trend: "int", from_colab=False) -> "Graph":
+    if from_colab:
+        path_root_folders = os.path.abspath(
+            "/content/drive/MyDrive/tesis/data/networks_by_trend"
+        )
+    else:
+        path_root_folders = PATH_DATA_NETWORKS_BY_TREND
+    path_network = os.path.join(
+        path_root_folders, f"TREND_ID_{id_trend}", "network_neighbour.gml"
+    )
+    g_nx = read_gml(path_network)
+    return g_nx
 
 
 def write_attributes_by_trend(
@@ -404,6 +452,15 @@ def get_dataframe_trend_to_id(from_colab=False) -> "dict[str, str]":
     else:
         idmap = pd.read_csv(PATH_INDEX_TREND).to_dict("list")
     idmap = dict(zip(idmap["trend"], idmap["id_trend"]))
+    return idmap
+
+
+def get_dict_trend_burst(from_colab=False) -> "dict[str, str]":
+    if from_colab:
+        idmap = pd.read_csv("/content/data/finaldf.csv").to_dict("list")
+    else:
+        idmap = pd.read_csv(PATH_FINAL_DF).to_dict("list")
+    idmap = dict(zip(idmap["trend"], idmap["burst"]))
     return idmap
 
 

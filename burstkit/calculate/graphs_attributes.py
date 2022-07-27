@@ -61,7 +61,7 @@ def calculate_some_metrics(
     list_of_nodes = list(map(lambda x: x, g.iterNodes()))
 
     local_clustering_coefficient = LocalClusteringCoefficient(g)
-    betweenness = ApproxBetweenness(g)
+    # betweenness = ApproxBetweenness(g)
     closeness = ApproxCloseness(g, normalized=True, nSamples=nSamples)
     katz = KatzCentrality(g)
     core_decomposition = CoreDecomposition(g)
@@ -73,7 +73,7 @@ def calculate_some_metrics(
     warning(f"[{trend}][METRIC] Calculating local clustering coefficient")
     local_clustering_coefficient.run()
     warning(f"[{trend}][METRIC] Calculating betweenness")
-    betweenness.run()
+    # betweenness.run()
     warning(f"[{trend}][METRIC] Calculating closeness")
     closeness.run()
     warning(f"[{trend}][METRIC] Calculating Katz centrality")
@@ -89,7 +89,7 @@ def calculate_some_metrics(
 
     # get results
     local_clustering_coefficient_results = local_clustering_coefficient.scores()
-    betweenness_results = betweenness.scores()
+    # betweenness_results = betweenness.scores()
     closeness_results = closeness.scores()
     katz_results = katz.scores()
     core_decomposition_results = core_decomposition.scores()
@@ -118,24 +118,24 @@ def calculate_some_metrics(
                 f"PermissionError: cannot save local clustering coefficient for TREND: {trend}. File already opened"
             )
 
-        try:
-            warning("Saving local betweenness coefficient")
-            scores = pd.DataFrame(
-                data={
-                    "uid_part": list_of_nodes,
-                    "value": betweenness_results,
-                }
-            )
-            write_attributes_by_trend(
-                trend=trend,
-                attribute_name="betweenness",
-                scores=scores,
-                from_colab=from_colab,
-            )
-        except PermissionError:
-            warning(
-                f"PermissionError: cannot save local betweenness coefficient for TREND: {trend}. File already opened"
-            )
+        # try:
+        #     warning("Saving local betweenness coefficient")
+        #     scores = pd.DataFrame(
+        #         data={
+        #             "uid_part": list_of_nodes,
+        #             "value": betweenness_results,
+        #         }
+        #     )
+        #     write_attributes_by_trend(
+        #         trend=trend,
+        #         attribute_name="betweenness",
+        #         scores=scores,
+        #         from_colab=from_colab,
+        #     )
+        # except PermissionError:
+        #     warning(
+        #         f"PermissionError: cannot save local betweenness coefficient for TREND: {trend}. File already opened"
+        #     )
 
         try:
             warning("Saving local closeness coefficient")

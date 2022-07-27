@@ -26,8 +26,6 @@ from threading import Thread
 # pprint(G.number_of_nodes())
 
 
-
-
 #
 # TREND_TIMELINE_TWEETS: "dict[str, pd.DataFrame]" = (
 #     rf.get_relation_trend_timeline_tweets(min_number_tweets=4000)
@@ -70,8 +68,8 @@ PATH_ROOT_NETWORK_FOLDERS = rf.PATH_DATA_NETWORKS_BY_TREND
 PATH_INDEX_TREND = rf.PATH_INDEX_TREND
 number_threads = 4
 
-def get_path_folder_trend_colab(
-    trend: "str" ) -> "os.path":
+
+def get_path_folder_trend_colab(trend: "str") -> "os.path":
     idmap = pd.read_csv(PATH_INDEX_TREND).to_dict("list")
     idmap = dict(zip(idmap["trend"], idmap["id_trend"]))
     # assert idmap in list(idmap.keys()), "Trend not found"
@@ -82,6 +80,7 @@ def get_path_folder_trend_colab(
 def is_computed_neibours_graph(trend: "str"):
     path = get_path_folder_trend_colab(trend)
     return not os.path.exists(os.path.join(path, "network_neighbour.gml"))
+
 
 def compute_by_thread(i):
     task_trend = split_trend_null[i]
