@@ -1,3 +1,5 @@
+import pprint
+
 import numpy as np
 
 import pandas as pd
@@ -30,6 +32,8 @@ PATH_COLAB_MUTUAL_FOLLOW_NETWORK_FROM_DRIVE = (
 PATH_DATA_NETWORKS_BY_TREND = os.path.join("data", "networks_by_trend")
 PATH_FINAL_DF = os.path.join("data", "finaldf.csv")
 PATH_INDEX_TREND = os.path.join(PATH_DATA_NETWORKS_BY_TREND, "index_trends.csv")
+
+PATH_GRAPHS_FIRST_CASE = os.path.join("data/data_new_vecindad/", "data_new_vecindad")
 
 FOLDER_TREND_ID = "TREND_ID_{}"
 UID = "uid"
@@ -462,6 +466,18 @@ def get_dict_trend_burst(from_colab=False) -> "dict[str, str]":
         idmap = pd.read_csv(PATH_FINAL_DF).to_dict("list")
     idmap = dict(zip(idmap["trend"], idmap["burst"]))
     return idmap
+
+
+def get_list_trend_first_case_graphs(from_colab=False) -> "list[str]":
+    if from_colab:
+        # FIXME: This is a hack to get the list of trends
+        path = PATH_GRAPHS_FIRST_CASE
+    else:
+        path = PATH_GRAPHS_FIRST_CASE
+    raw_dir = os.listdir(path)
+    is_all_files_gexf: bool = all(map(lambda x: x.split(".")[-1] == "gexf", raw_dir))
+    assert is_all_files_gexf, "Not all files are gexf"
+    return raw_dir
 
 
 if __name__ == "__main__":

@@ -6,6 +6,7 @@ import pandas as pd
 from pandas import Index
 from tqdm import tqdm
 
+from burstkit.results.comparative_timeline_attribute import read_graph_attribute_from_gefx
 from burstkit.util.read_files import (
     get_dataframe_trend_to_id,
     get_timeline_tweets_by_trend,
@@ -80,30 +81,42 @@ def centrered_timeline_count_in_maximun_activiy(
 def main() -> None:
     trends_by_burst: dict[str, str] = get_dict_trend_burst()
     for trend in tqdm(trends_by_burst):
-        TREND: str = trend
-        b = trends_by_burst[TREND]
-        timeline: pd.DataFrame = get_timeline_tweets_by_trend(TREND)
+        try:
+            TREND: str = trend
+            ATTRIBUTE: str = "core"
+            b = trends_by_burst[TREND]
+            timeline: pd.DataFrame = get_timeline_tweets_by_trend(TREND)
 
-        timeline_count: pd.DataFrame = generate_windows_time_timeline_count(timeline)
-        timeline_count_centered_in_maximun_activity: pd.DataFrame = (
-            centrered_timeline_count_in_maximun_activiy(timeline_count)
-        )
+            timeline_count: pd.DataFrame = generate_windows_time_timeline_count(timeline)
+            timeline_count_centered_in_maximun_activity: pd.DataFrame = (
+                centrered_timeline_count_in_maximun_activiy(timeline_count)
+            )
+            user_attribute: pd.DataFrame = read_graph_attribute_from_gefx(trend=TREND, attribute=ATTRIBUTE)
+            timeline_mapped_attribute: pd.DataFrame = timeline.copy()
 
-        fig, ax = plt.subplots()
-        ax.plot(
-            timeline_count_centered_in_maximun_activity["count"], color=COLOR_BURST[b]
-        )
-        ax.set_xlabel("Tiempo")
-        ax.set_xticklabels(
-            list(
-                map(
-                    lambda x: str(x).split(" ")[1][0:5],
-                    timeline_count_centered_in_maximun_activity.index,
-                )
-            ),
-            rotation=45,
-            size=12,
-        )
-        ax.set_ylabel("Cantidad de Tweets")
-        ax.set_title(f"#{TREND}")
-        plt.savefig(f"data\\images\\timeline_tweets\\{TREND}.png")
+            foo = read_graph_attribute_from_gefx(TREND, attribute=ATTRIBUTE)
+            dict_to_replace = dict(zip(foo.uid, foo.core))
+            timeline_mapped_attribute["attribute"] = user_attribute[ATTRIBUTE].replace(dict_to_replace)
+
+            pprint.pprint(timeline_mapped_attribute)
+            fig, ax = plt.subplots()
+            ax.plot(
+                timeline_count_centered_in_maximun_activity["count"], color=COLOR_BURST[b]
+            )
+            ax.set_xlabel("Tiempo")
+            ax.set_xticklabels(
+                list(
+                    map(
+                        lambda x: str(x).split(" ")[1][0:5],
+                        timeline_count_centered_in_maximun_activity.index,
+                    )
+                ),
+                rotation=45,
+                size=12,
+            )
+            ax.set_ylabel("Cantidad de Tweets")
+            ax.set_title(f"#{TREND}")
+            plt.show()
+            #plt.savefig(f"data\\images\\timeline_tweets\\{TREND}.png")
+        except AssertionError:
+            pass
