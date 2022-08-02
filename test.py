@@ -93,9 +93,13 @@ import burstkit.results as results
 
 
 # Sobre la linea de tiempo. Volvemos a recuperar el timeline
-
 import burstkit.results.plot_timelines_trends as result_plot_timelines_trends
-
 if __name__ == '__main__':
     result_plot_timelines_trends.main()
 
+
+
+#Sobre la linea de tiempo y comprarlo con un atributo.
+# import burstkit.results.comparative_timeline_attribute as result_comparative_timeline_attribute
+# if __name__ == '__main__':
+#     result_comparative_timeline_attribute.main()

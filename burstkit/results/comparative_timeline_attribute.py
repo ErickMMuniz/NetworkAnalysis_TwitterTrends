@@ -1,3 +1,4 @@
+import logging
 import os
 import pprint
 
@@ -25,7 +26,7 @@ PATH_GRAPHS_FIRST_CASE = os.path.join("data/data_new_vecindad/", "data_new_vecin
 
 def read_graph_attribute_from_gefx(trend: str, attribute: str = "core") -> pd.DataFrame:
     try:
-        g: nx.Graph = read_gexf(os.path.join(PATH_GRAPHS_FIRST_CASE, trend))
+        g: nx.Graph = read_gexf(os.path.join(PATH_GRAPHS_FIRST_CASE, trend + ".gexf"))
     except FileNotFoundError:
         g = None
     assert g is not None, "The graph is not found"
@@ -38,6 +39,7 @@ def read_graph_attribute_from_gefx(trend: str, attribute: str = "core") -> pd.Da
     values = map(
         lambda dict_attributes: dict_attributes[attribute], nodes_with_data.values()
     )
+    logging.warning("foooooooooooooooooooooooooo")
     return pd.DataFrame({"uid": keys, attribute: values})
 
 
