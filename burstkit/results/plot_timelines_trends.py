@@ -176,5 +176,7 @@ def main() -> None:
 
         ax.grid(True)
         plt.show()
-        input("qwe")
+
+
+        # TODO: EN CUÁNTAS COMUNIDADES DE MANERA SIMULTÁNEA SE ENCUENTRA EL TREND EN EL MOMENTO DE LA MAYOR ACTIVADAD.
         # plt.savefig(f"data\\images\\timeline_tweets\\{TREND}.png")
