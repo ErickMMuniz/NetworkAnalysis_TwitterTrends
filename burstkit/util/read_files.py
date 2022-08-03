@@ -34,6 +34,7 @@ PATH_FINAL_DF = os.path.join("data", "finaldf.csv")
 PATH_INDEX_TREND = os.path.join(PATH_DATA_NETWORKS_BY_TREND, "index_trends.csv")
 
 PATH_GRAPHS_FIRST_CASE = os.path.join("data/data_new_vecindad/", "data_new_vecindad")
+PATH_GRAPHS_GML_WITH_COMMUNITIES = os.path.join("data/data_new_vecindad_community", "data_cm_network")
 
 FOLDER_TREND_ID = "TREND_ID_{}"
 UID = "uid"
@@ -55,7 +56,7 @@ def is_path_file_in_data_path(path_file: "str") -> "bool":
 
 
 def read_file_space_separated(
-    path_file: "str", limit_rows: "int" = None, is_edge_list: "bool" = False
+        path_file: "str", limit_rows: "int" = None, is_edge_list: "bool" = False
 ) -> "pd.DataFrame":
     # assert is_path_file_in_data_path(
     #     path_file
@@ -69,30 +70,30 @@ def read_file_space_separated(
     )
     if is_edge_list:
         assert (
-            data[SOURCE].dtypes == "object"
+                data[SOURCE].dtypes == "object"
         ), "[ERROR][DFDataTypes] There are some users with uid like string"
         assert (
-            data[TARGET].dtypes == "object"
+                data[TARGET].dtypes == "object"
         ), "[ERROR][DFDataTypes] There are some users with uid like string"
     return data
 
 
 def parse_string_to_trend_and_timestamp_and_uid(
-    detailed_string: "str",
+        detailed_string: "str",
 ) -> "(str, list[str])":
     spliited_string = detailed_string.split()
     return spliited_string[0], spliited_string[1:]
 
 
 def parse_string_to_trend_and_timestamp_and_uid_edge(
-    detailed_string: "str",
+        detailed_string: "str",
 ) -> "(str, list[str])":
     spliited_string = detailed_string.split()
     return spliited_string[0], spliited_string[1:]
 
 
 def single_split_string_to_timestamp_uid(
-    timestamp_user: "str",
+        timestamp_user: "str",
 ) -> "tuple[Timestamp,np.str]":
     split_by_comma: "list[str]" = timestamp_user.split(",")
     timestamp = pd.to_datetime(split_by_comma[0], unit="s")
@@ -108,7 +109,7 @@ def split_timestamp_user(timestamp_uid: "list[str]") -> "list[tuple[Timestamp,np
 
 
 def transform_tuple_trend_and_timestamp_uid(
-    trend_ts_uid: "tuple[str, list[str]]",
+        trend_ts_uid: "tuple[str, list[str]]",
 ) -> "tuple[str, list[tuple[Timestamp,np.str]]]":
     trend_name = trend_ts_uid[0]
     timeline_users: "list[str]" = trend_ts_uid[1]
@@ -117,7 +118,7 @@ def transform_tuple_trend_and_timestamp_uid(
 
 
 def read_file_each_line_different_length(
-    path_file: "str", limit_rows: "int" = None, min_number_tweets: "int" = 0
+        path_file: "str", limit_rows: "int" = None, min_number_tweets: "int" = 0
 ) -> "dict[str, list[tuple[Timestamp, str]]]":
     file = dict(
         map(
@@ -125,7 +126,7 @@ def read_file_each_line_different_length(
             tqdm(
                 filter(
                     lambda trend_list_uid_ts: len(trend_list_uid_ts[1])
-                    >= min_number_tweets,
+                                              >= min_number_tweets,
                     tqdm(
                         list(
                             map(
@@ -146,9 +147,8 @@ def read_file_each_line_different_length(
 
 
 def single_split_string_to_timestamp_uid_fromuid(
-    timestamp_user: "str",
+        timestamp_user: "str",
 ) -> "tuple[Timestamp,np.str,np.str]":
-
     split_by_comma: "list[str]" = timestamp_user.split(",")
     timestamp = pd.to_datetime(split_by_comma[0], unit="s")
     uid_target = np.str(split_by_comma[1])
@@ -165,9 +165,8 @@ def single_split_string_to_timestamp_uid_fromuid(
 
 
 def single_split_string_to_timestamp_fromuid_uid(
-    timestamp_user: "str",
+        timestamp_user: "str",
 ) -> "tuple[Timestamp,np.str,np.str]":
-
     split_by_comma: "list[str]" = timestamp_user.split(",")
     timestamp = pd.to_datetime(split_by_comma[0], unit="s")
     uid_source = np.str(split_by_comma[1])
@@ -184,19 +183,19 @@ def single_split_string_to_timestamp_fromuid_uid(
 
 
 def split_timestamp_user_edge(
-    timestamp_uid: "list[str]",
+        timestamp_uid: "list[str]",
 ) -> "list[tuple[Timestamp,np.str, np.str]]":
     return list(map(single_split_string_to_timestamp_uid_fromuid, timestamp_uid))
 
 
 def split_timestamp_user_edge_mentions(
-    timestamp_uid: "list[str]",
+        timestamp_uid: "list[str]",
 ) -> "list[tuple[Timestamp,np.str, np.str]]":
     return list(map(single_split_string_to_timestamp_fromuid_uid, timestamp_uid))
 
 
 def transform_tuple_trend_and_timestamp_egde_uid(
-    trend_ts_uid: "tuple[str, list[str]]",
+        trend_ts_uid: "tuple[str, list[str]]",
 ) -> "tuple[str, list[tuple[Timestamp,np.str, np.str]]]":
     """
     For convention
@@ -210,7 +209,7 @@ def transform_tuple_trend_and_timestamp_egde_uid(
 
 
 def transform_tuple_trend_and_timestamp_egde_uid_mentions(
-    trend_ts_uid: "tuple[str, list[str]]",
+        trend_ts_uid: "tuple[str, list[str]]",
 ) -> "tuple[str, list[tuple[Timestamp,np.str, np.str]]]":
     """
     For convention
@@ -224,7 +223,7 @@ def transform_tuple_trend_and_timestamp_egde_uid_mentions(
 
 
 def read_file_each_line_different_length_and_double_user(
-    path_file: "str", limit_rows: "int" = None
+        path_file: "str", limit_rows: "int" = None
 ) -> "dict[str, list[tuple[Timestamp, str , str ]]]":
     file = dict(
         map(
@@ -241,7 +240,7 @@ def read_file_each_line_different_length_and_double_user(
 
 
 def read_file_each_line_different_length_and_double_user_mention(
-    path_file: "str", limit_rows: "int" = None
+        path_file: "str", limit_rows: "int" = None
 ) -> "dict[str, list[tuple[Timestamp, str , str ]]]":
     """
     Disclaimer: This is the same function, but inverse the order of nodes.
@@ -293,7 +292,7 @@ def get_timeline_mentions(limit_rows=None):
 
 
 def get_relation_trend_timeline_tweets(
-    limit_rows=None, min_number_tweets=0
+        limit_rows=None, min_number_tweets=0
 ) -> "dict[str,pd.DataFrame]":
     trend_timeline: "dict[str, list[tuple[Timestamp, str]]]" = get_timeline_tweets(
         limit_rows=limit_rows, min_number_tweets=min_number_tweets
@@ -356,7 +355,7 @@ def get_timeline_tweets_by_trend(trend: "str") -> "pd.DataFrame":
 
 
 def get_attribute_uidpart_dataframe_by_trend(
-    id_trend: "str", attribute: "str"
+        id_trend: "str", attribute: "str"
 ) -> "pd.DataFrame":
     """
     Get the timeline of a trend.
@@ -427,7 +426,7 @@ def get_nx_graph_from_file(id_trend: "int", from_colab=False) -> "Graph":
 
 
 def write_attributes_by_trend(
-    trend: "str", attribute_name: "str", scores: "pd.DataFrame", from_colab=False
+        trend: "str", attribute_name: "str", scores: "pd.DataFrame", from_colab=False
 ) -> None:
     id = get_id_trend_colab(trend, from_colab=from_colab)
     warning("[DEBUG] Writing trend: {} with id -> {}".format(trend, id))
@@ -478,6 +477,28 @@ def get_list_trend_first_case_graphs(from_colab=False) -> "list[str]":
     is_all_files_gexf: bool = all(map(lambda x: x.split(".")[-1] == "gexf", raw_dir))
     assert is_all_files_gexf, "Not all files are gexf"
     return raw_dir
+
+
+def get_list_trend_gml_graphs(from_colab=False) -> list[str]:
+    if from_colab:
+        path = PATH_GRAPHS_GML_WITH_COMMUNITIES
+    else:
+        path = PATH_GRAPHS_GML_WITH_COMMUNITIES
+    raw_dir = os.listdir(path)
+    filtered_dir_gml_extension = list(filter(lambda x: x.split(".")[-1] == "gml", raw_dir))
+    return filtered_dir_gml_extension
+
+
+def read_gml_red_by_trend(trend_with_gml_extension: str, from_colab=False) -> "Graph":
+    assert trend_with_gml_extension.split(".")[-1] == "gml", "Trend is not gml"
+    if from_colab:
+        path = PATH_GRAPHS_GML_WITH_COMMUNITIES
+    else:
+        path = PATH_GRAPHS_GML_WITH_COMMUNITIES
+    path_gml = os.path.join(path, trend_with_gml_extension)
+    assert os.path.exists(path_gml), "File not found"
+    g_nx = read_gml(path_gml)
+    return g_nx
 
 
 if __name__ == "__main__":
