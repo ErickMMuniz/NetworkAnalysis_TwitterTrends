@@ -22,7 +22,9 @@ plt.style.use("bmh")
 COLOR_BURST: dict[int, str] = {1: "purple", 0: "orange"}
 
 PATH_GRAPHS_FIRST_CASE = os.path.join("data/data_new_vecindad/", "data_new_vecindad")
-PATH_GRAPHS_GML_WITH_COMMUNITIES = os.path.join("data/data_new_vecindad_community", "data_cm_network")
+PATH_GRAPHS_GML_WITH_COMMUNITIES = os.path.join(
+    "data/data_new_vecindad_community", "data_cm_network"
+)
 
 
 def read_graph_attribute_from_gefx(trend: str, attribute: str = "core") -> pd.DataFrame:
@@ -45,7 +47,9 @@ def read_graph_attribute_from_gefx(trend: str, attribute: str = "core") -> pd.Da
 
 def read_graph_attribute_from_gml(trend: str, attribute: str = "core") -> pd.DataFrame:
     try:
-        g: nx.Graph = read_gml(os.path.join(PATH_GRAPHS_GML_WITH_COMMUNITIES, trend + ".gml"))
+        g: nx.Graph = read_gml(
+            os.path.join(PATH_GRAPHS_GML_WITH_COMMUNITIES, trend + ".gml")
+        )
     except FileNotFoundError:
         g = None
     assert g is not None, "The graph is not found"
