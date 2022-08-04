@@ -322,9 +322,109 @@ def generate_plot_len_unique_comminities_by_burst(
             continue
 
 
+def comparative_core_comunities_by_burst(trends_by_burst: dict[str, str]) -> None:
+    fig, ax = plt.subplots()
+    ax.set_title("test")
+    ax.set_xlabel("Core")
+    ax.set_ylabel("Comunidad")
+
+    for trend in tqdm(trends_by_burst.keys()):
+        TREND: str = trend
+        try:
+            ATTRIBUTE_CORE: str = "core"
+            ATTRIBUTE_IDCOM: str = "idcom"
+            WINDOW_DELTA: str = "60min"
+            b = trends_by_burst[TREND]
+            timeline: pd.DataFrame = get_timeline_tweets_by_trend(TREND)
+
+            timeline_count: pd.DataFrame = generate_windows_time_timeline_count(
+                timeline, size_window=WINDOW_DELTA
+            )
+            timeline_count_centered_in_maximun_activity: pd.DataFrame = (
+                centrered_timeline_count_in_maximun_activiy(timeline_count)
+            )
+
+            #
+            timeline_mapped_attribute: pd.DataFrame = timeline.copy()
+            user_core: pd.DataFrame = read_graph_attribute_from_gefx(
+                trend=TREND, attribute=ATTRIBUTE_CORE
+            )
+            user_idcom: pd.DataFrame = read_graph_attribute_from_gml(
+                trend=TREND, attribute=ATTRIBUTE_IDCOM
+            )
+            dict_to_replace_core = dict(
+                zip(user_core["uid"], user_core[ATTRIBUTE_CORE])
+            )
+
+            dict_to_replace_idcom = dict(
+                zip(user_idcom["uid"], user_idcom[ATTRIBUTE_IDCOM])
+            )
+
+            timeline_mapped_attribute[ATTRIBUTE_CORE] = timeline_mapped_attribute[
+                "uid"
+            ].map(dict_to_replace_core)
+
+            timeline_mapped_attribute[ATTRIBUTE_IDCOM] = timeline_mapped_attribute[
+                "uid"
+            ].map(dict_to_replace_idcom)
+
+            number_of_null_values = timeline_mapped_attribute.isnull().sum().sum()
+            logging.warning(f"Number of null values is {number_of_null_values}")
+            logging.warning("Input null values with the mean of the attribute")
+            timeline_mapped_attribute[ATTRIBUTE_CORE].fillna(
+                timeline_mapped_attribute[ATTRIBUTE_CORE].mean(), inplace=True
+            )
+            timeline_mapped_attribute[ATTRIBUTE_IDCOM].fillna(
+                method="pad", inplace=True
+            )
+
+            assert (
+                timeline_mapped_attribute.isnull().sum().sum() == 0
+            ), "There are null values in the attribute"
+            timeline_mapped_attribute.set_index("timestamp", inplace=True)
+
+            timeline_mapped_attribute_mean = timeline_mapped_attribute.resample(
+                WINDOW_DELTA
+            ).mean()
+
+            timeline_mapped_attribute_unique = timeline_mapped_attribute.resample(
+                WINDOW_DELTA
+            ).apply(lambda x: x.nunique())
+
+            Y = timeline_count_centered_in_maximun_activity.copy()["count"]
+
+            # FIXME this is a bug in the code
+            idmax: Index = Y.idxmax()
+
+            Y_attribute_mean = timeline_mapped_attribute_mean[
+                timeline_mapped_attribute_mean.index.isin([idmax])
+            ]
+            Y_attribute_unique = timeline_mapped_attribute_unique[
+                timeline_mapped_attribute_unique.index.isin([idmax])
+            ]
+
+            pprint.pprint(Y_attribute_mean[ATTRIBUTE_CORE])
+            pprint.pprint(Y_attribute_unique[ATTRIBUTE_IDCOM])
+
+            ax.scatter(
+                Y_attribute_mean[ATTRIBUTE_CORE],
+                Y_attribute_unique[ATTRIBUTE_IDCOM],
+                color=COLOR_BURST[b]
+            )
+
+        except Exception as e:
+            logging.error(f"Error in {TREND}")
+            logging.error(e)
+
+    fig.savefig(f"data\\images\\comparative_core_comunities_by_burst.png")
+    input("Press any key to continue...")
+
+
 def main() -> None:
     trends_by_burst: dict[str, str] = get_dict_trend_burst()
 
-    generate_plot_timeline_count_and_core_attribute(trends_by_burst)
+    # generate_plot_timeline_count_and_core_attribute(trends_by_burst)
 
     # generate_plot_len_unique_comminities_by_burst(trends_by_burst)
+
+    comparative_core_comunities_by_burst(trends_by_burst)
