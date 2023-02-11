@@ -2,7 +2,7 @@
 ownpapers/
 
 #Data. (Se redirecciona a los papers)
-data
+/data
 data_trend_time.zip
 .idea
 
