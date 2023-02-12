@@ -2,7 +2,7 @@
 ownpapers/
 
 #Data. (Se redirecciona a los papers)
-data
+/data
 data_trend_time.zip
 .idea
 
@@ -17,3 +17,19 @@ latex/source/main.aux
 venv
 
 conf.conf
+
+#DVC
+/data
+.dvc/cache
+
+#PyCharm
+.idea
+
+#Python Cache
+src/__pycache__
+
+#TEST
+test.py
+
+#SECRETS
+firebase_token.json
