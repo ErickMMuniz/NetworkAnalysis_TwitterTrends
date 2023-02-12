@@ -17,3 +17,15 @@ latex/source/main.aux
 venv
 
 conf.conf
+
+#DVC
+/data
+
+#PyCharm
+.idea
+
+#Python Cache
+src/__pycache__
+
+#TEST
+test.py
