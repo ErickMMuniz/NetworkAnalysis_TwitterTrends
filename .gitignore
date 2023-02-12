@@ -20,6 +20,7 @@ conf.conf
 
 #DVC
 /data
+.dvc/cache
 
 #PyCharm
 .idea
@@ -29,3 +30,6 @@ src/__pycache__
 
 #TEST
 test.py
+
+#SECRETS
+firebase_token.json

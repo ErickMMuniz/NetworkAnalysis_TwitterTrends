@@ -1,4 +1,4 @@
 [core]
-    remote = origin
-['remote "origin"']
-    url = https://dagshub.com/ErickMMuniz/network-trends-twitter.dvc
+    remote = storage
+['remote "storage"']
+    url = gs://personalwebp.appspot.com
