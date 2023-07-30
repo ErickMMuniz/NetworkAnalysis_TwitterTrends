@@ -8,6 +8,7 @@ import re
 from datetime import datetime
 from pydantic import BaseModel
 from tqdm import tqdm
+import logging
 
 MINIMUN_TWEETS = 4000
 
@@ -60,6 +61,24 @@ def read_and_parse_mutual_followers_dat(path: Text, limit_lines=100) -> nx.Graph
             print(maybe_users)
 
 
+def read_all_trends_names(path=TIMELINE_TWEETS_PATH):
+    trends = []
+    with open(path, encoding="utf8") as file:
+        for i, line in enumerate(file):
+            maybe_hashtag = re.search(HASHTAG_RE, line.strip())
+            maybe_trend = (
+                maybe_hashtag.group()
+                if maybe_hashtag is not None
+                else line.strip().split()[0]
+            )
+            maybe_tweets = re.findall(TWEET_LOG_RE, line.strip())
+            if len(maybe_tweets) > MINIMUN_TWEETS:
+                trends.append(maybe_trend)
+        file.close()
+
+    return trends
+
+
 def read_and_parse_timeline_tweets_path(path: Text):
     trends = []
     with open(path, encoding="utf8") as file:
@@ -80,11 +99,16 @@ def read_and_parse_timeline_tweets_path(path: Text):
 
     return trends
 
-def read_users_by_trend(trend:Text, path = TIMELINE_TWEETS_PATH):
+
+def read_users_by_trend(trend: Text, path=TIMELINE_TWEETS_PATH):
     with open(path, encoding="utf8") as file:
         for i, line in enumerate(file):
             maybe_hashtag = re.search(HASHTAG_RE, line.strip())
-            maybe_trend = maybe_hashtag.group() if maybe_hashtag is not None else line.strip().split()[0]
+            maybe_trend = (
+                maybe_hashtag.group()
+                if maybe_hashtag is not None
+                else line.strip().split()[0]
+            )
 
             if maybe_trend == trend:
                 maybe_tweets = re.findall(TWEET_LOG_RE, line.strip())
@@ -97,7 +121,8 @@ def read_users_by_trend(trend:Text, path = TIMELINE_TWEETS_PATH):
                 file.close()
                 return Trend(trend=trend, tweets=tweets)
 
-def get_edge_list_by_users(users, path = MUTUAL_FOLLOWERS_PATH) -> Text:
+
+def get_edge_list_by_users(users, path=MUTUAL_FOLLOWERS_PATH) -> Text:
     USER_RE = "\d+"
     result = ""
     with open(path) as file:
@@ -110,7 +135,6 @@ def get_edge_list_by_users(users, path = MUTUAL_FOLLOWERS_PATH) -> Text:
     return result
 
 
-
 if __name__ == "__main__":
     assert os.path.isdir(DATA_PATH)
     assert os.path.isfile(MUTUAL_FOLLOWERS_PATH)
@@ -118,12 +142,10 @@ if __name__ == "__main__":
 
     TREND = "music"
     trend = read_users_by_trend(TREND)
-    users = set(map(lambda tweet: tweet.user, trend.tweets)) #There user that tweet more than once
+    users = set(
+        map(lambda tweet: tweet.user, trend.tweets)
+    )  # There user that tweet more than once
     edge_list = get_edge_list_by_users(users)
     print(edge_list)
-
-
-
-
-    # read_and_parse_mutual_followers_dat(MUTUAL_FOLLOWERS_PATH)
-    # trends = read_and_parse_timeline_tweets_path(TIMELINE_TWEETS_PATH)
+    logging.warning("PARSING EDGE LIST")
+    G = nx.parse_edgelist(edge_list.split("\n"))
