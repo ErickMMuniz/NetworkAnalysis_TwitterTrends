@@ -1,6 +1,6 @@
 import re
 import networkx as nx
-import tqdm
+from tqdm import tqdm
 
 from src.values import *
 from src.objects import *
