@@ -1,0 +1,15 @@
+#!/bin/bash
+
+DATA_PATH="https://zenodo.org/record/4686013/files/virality2013.tar.gz"
+
+echo "[LOG] DOWNLOADING DATA FROM $DATA_PATH"
+
+wget "$DATA_PATH"
+
+echo "[LOG] FINISH DOWNLOAD"
+
+mkdir data
+
+tar -xvf virality2013.tar.gz -C data
+
+rm -f virality2013.tar.gz
