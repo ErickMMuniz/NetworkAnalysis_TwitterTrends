@@ -87,3 +87,47 @@ def get_edge_list_by_users(users, path=MUTUAL_FOLLOWERS_PATH) -> Text:
                 result += line.strip() + "\n"
         file.close()
     return result
+
+
+def read_tweets(trend: Text, path=TIMELINE_TWEETS_PATH):
+    with open(path, encoding="utf8") as file:
+        for i, line in enumerate(file):
+            maybe_hashtag = re.search(HASHTAG_RE, line.strip())
+            maybe_trend = (
+                maybe_hashtag.group()
+                if maybe_hashtag is not None
+                else line.strip().split()[0]
+            )
+
+            if maybe_trend == trend:
+                maybe_tweets = re.findall(TWEET_LOG_RE, line.strip())
+                tweets = list(
+                    map(
+                        lambda tweet_log: to_tweet(tweet_log, trend),
+                        maybe_tweets,
+                    )
+                )
+                file.close()
+                return Trend(trend=trend, tweets=tweets)
+
+def read_retweets(trend: Text, path=TIMELINE_RETWEETS_PATH):
+
+    with open(path, encoding="utf8") as file:
+        for i, line in enumerate(file):
+            maybe_hashtag = re.search(HASHTAG_RE, line.strip())
+            maybe_trend = (
+                maybe_hashtag.group()
+                if maybe_hashtag is not None
+                else line.strip().split()[0]
+            )
+
+            if maybe_trend == trend:
+                maybe_retweets = re.findall(RETWEET_LOG_RE, line.strip())
+                retweets = list(
+                    map(
+                        lambda tweet_log: to_retweet(tweet_log, trend),
+                        maybe_retweets,
+                    )
+                )
+                file.close()
+                return Trend(trend=trend, retweets=retweets)

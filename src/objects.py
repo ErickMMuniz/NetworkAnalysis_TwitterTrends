@@ -9,10 +9,16 @@ class Tweet(BaseModel):
     user: Text
     created_at: datetime
 
+class ReTweet(BaseModel):
+    trend: Text
+    source_user: Text
+    target_user: Text
+    created_at: datetime
 
 class Trend(BaseModel):
     trend: Text
-    tweets: List[Tweet]
+    tweets: List[Tweet] = []
+    retweets: List[ReTweet] = []
 
 
 def to_tweet(tweet_log_text: Text, trend: Text) -> Tweet:
@@ -28,6 +34,22 @@ def to_tweet(tweet_log_text: Text, trend: Text) -> Tweet:
     user = str(user)
 
     return Tweet(trend=trend, user=user, created_at=created_at)
+
+
+def to_retweet(retweet_log_text: Text, trend: Text) -> ReTweet:
+    """
+        Parse text like
+                TIMESTAMP_UNIX_EPCH,USER
+        :param tweet_log_text:
+        :param trend:
+        :return: Tweet
+        """
+    timestamp, source_user, target_user = retweet_log_text.split(",")
+    created_at = datetime.fromtimestamp(float(timestamp))
+    source = str(source_user)
+    target = str(target_user)
+
+    return ReTweet(trend=trend, source_user=source, target_user=target, created_at=created_at)
 
 
 def split_by_time(tweets: List[Tweet], window="'1H'") -> List[List[Tweet]]:
