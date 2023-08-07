@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Text, List
+from typing import Text, List, Tuple
 from datetime import datetime, timedelta
 import pandas as pd
 
@@ -52,29 +52,49 @@ def to_retweet(retweet_log_text: Text, trend: Text) -> ReTweet:
     return ReTweet(trend=trend, source_user=source, target_user=target, created_at=created_at)
 
 
-def split_by_time(tweets: List[Tweet], window="'1H'") -> List[List[Tweet]]:
-    tweets = sorted(tweets, key=lambda t: t.created_at)
+def split_by_time(trend: Trend, window_freq="1H"):
+
+    tweets = sorted(trend.tweets, key=lambda t: t.created_at)
+    retweets = sorted(trend.retweets, key=lambda t: t.created_at)
 
     first_tweet = tweets[0].created_at
     last_tweet = tweets[-1].created_at
 
-    first_date = datetime(first_tweet.year, first_tweet.month, first_tweet.day, hour=first_tweet.hour)
-    last_date = datetime(last_tweet.year, last_tweet.month, last_tweet.day, hour=last_tweet.hour) + timedelta(hours=1)
+    first_retweet = retweets[0].created_at
+    last_retweet = retweets[-1].created_at
 
-    range = pd.date_range(first_date, last_date, freq='1H')
-    windows = zip(range[:-2], range[1:])
+    first_event = sorted([first_tweet, first_retweet])[0]
+    last_event = sorted([last_tweet, last_retweet])[-1]
 
-    nested_elements = []
+    first_date = datetime(first_event.year, first_event.month, first_event.day, hour=first_event.hour)
+    last_date = datetime(last_event.year, last_event.month, last_event.day, hour=last_event.hour) + timedelta(hours=1)
+
+    range = pd.date_range(first_date, last_date, freq=window_freq)
+    windows : zip[Tuple[datetime]] = zip(range[:-2], range[1:])
+
+    nested_elements = {}
 
     for window in windows:
-        elements = []
+        inner_tweets = []
+        inner_retweets = []
+        lower_bound = window[0]
+        upper_bound = window[1]
+        key = str(lower_bound)
+        nested_elements[key] = {}
+
         for tweet in tweets:
-            lower_bound = window[0]
-            upper_bound = window[1]
             is_in_window = lower_bound <= tweet.created_at <= upper_bound
 
             if is_in_window:
-                elements.append(tweet)
-        nested_elements.append(elements)
+                inner_tweets.append(tweet)
+
+        for retweet in retweets:
+            is_in_window = lower_bound <= retweet.created_at <= upper_bound
+
+            if is_in_window:
+                inner_retweets.append(retweet)
+
+        nested_elements[key]["tweets"] = inner_tweets
+        nested_elements[key]["retweets"] = inner_retweets
 
     return nested_elements

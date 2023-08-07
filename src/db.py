@@ -9,6 +9,7 @@ import logging
 import os
 
 from datetime import datetime
+from typing import Optional
 
 
 def get_trend_str(trend):
@@ -44,4 +45,8 @@ def generate_timelines_in_csv():
     df.to_csv(TRENDS_DB, index=False)
 
 
+def read_trend_dump(trend : Optional[Text] = None):
+    df = pd.read_csv(TRENDS_DB)
+    result = df if trend is None else df[df['name'] == trend]
+    return result
 
