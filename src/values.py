@@ -18,4 +18,5 @@ TIMELINE_TWEETS_PATH: Text = os.path.join(DATA_PATH, TIMELINE_TWEETS)
 TIMELINE_RETWEETS_PATH: Text = os.path.join(DATA_PATH, TIMELINE_RETWEETS)
 
 DB_PATH: Text = os.path.join(os.getcwd(), "db")
+FIRST_NEIGHBOR_PATH: Text = os.path.join(DB_PATH, "first_neighbor")
 TRENDS_DB: Text = os.path.join(DB_PATH,"timelines_trends.csv")

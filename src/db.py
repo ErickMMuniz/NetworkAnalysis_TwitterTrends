@@ -1,8 +1,7 @@
 from src.values import *
-from src.io import read_tweets, read_retweets, read_all_trends_names
+from src.io import read_tweets, read_retweets, read_all_trends_names, get_edge_list_by_users
 from src.objects import *
 from src.util import *
-
 
 import pandas as pd
 import logging
@@ -50,3 +49,36 @@ def read_trend_dump(trend : Optional[Text] = None):
     result = df if trend is None else df[df['name'] == trend]
     return result
 
+
+def generate_first_neighbor_by_trend(TREND: Text):
+    assert os.path.isdir(FIRST_NEIGHBOR_PATH)
+
+    df = read_trend_dump(TREND)
+    t = df['dump_trend'].apply(Trend.parse_raw).iloc[0]
+
+    splited_time = split_by_time(t)
+
+    key_list = []
+    edge_list_primera_vecindad = []
+    tweets_c = []
+    retweets_c = []
+
+    foo = list(splited_time.keys())[:]
+    for key in foo:
+        logging.warning("[{}] importing user friends".format(TREND))
+        tweets: List[Tweet] = splited_time[key]["tweets"]
+        retweets: List[ReTweet] = splited_time[key]["retweets"]
+
+        users = list(map(lambda tweet: tweet.user, tweets))
+        edge_list = get_edge_list_by_users(users)
+
+        key_list.append(key)
+        edge_list_primera_vecindad.append(edge_list)
+        tweets_c.append(Trend(trend=TREND, tweets=tweets).json())
+        retweets_c.append(Trend(trend=TREND, retweets=retweets).json())
+
+    df = pd.DataFrame(data={"first_hour": key_list, "edge_list": edge_list_primera_vecindad, "tweets": tweets_c,
+                            "retweets": retweets_c})
+
+    first_neighbor_trend_path = os.path.join(FIRST_NEIGHBOR_PATH, "{}.csv".format(TREND))
+    df.to_csv(first_neighbor_trend_path, index=False)
