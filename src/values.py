@@ -24,8 +24,10 @@ TIMELINE_RETWEETS_PATH: Text = os.path.join(DATA_PATH, TIMELINE_RETWEETS)
 FINAL_DF_PATH: Text = os.path.join(DB_PATH, FINAL_DF)
 
 FIRST_NEIGHBOR_PATH: Text = os.path.join(DB_PATH, "first_neighbor")
-TRENDS_DB: Text = os.path.join(DB_PATH,"timelines_trends.csv")
+TRENDS_DB: Text = os.path.join(DB_PATH, "timelines_trends.csv")
 
 
-MUTUAL_FOLLOWING = read_csv(MUTUAL_FOLLOWERS_PATH, sep=" ", names=["source", "target"], dtype=str)
+MUTUAL_FOLLOWING = read_csv(
+    MUTUAL_FOLLOWERS_PATH, sep=" ", names=["source", "target"], dtype=str
+)
 SPLIITED_MUTUAL_FOLLOWING = array_split(MUTUAL_FOLLOWING, 28)

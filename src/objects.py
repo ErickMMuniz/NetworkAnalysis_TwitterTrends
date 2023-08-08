@@ -4,16 +4,19 @@ from datetime import datetime, timedelta
 import pandas as pd
 from src.values import WINDOW_STUDY
 
+
 class Tweet(BaseModel):
     trend: Text
     user: Text
     created_at: datetime
+
 
 class ReTweet(BaseModel):
     trend: Text
     source_user: Text
     target_user: Text
     created_at: datetime
+
 
 class Trend(BaseModel):
     trend: Text
@@ -38,22 +41,23 @@ def to_tweet(tweet_log_text: Text, trend: Text) -> Tweet:
 
 def to_retweet(retweet_log_text: Text, trend: Text) -> ReTweet:
     """
-        Parse text like
-                TIMESTAMP_UNIX_EPCH,USER
-        :param tweet_log_text:
-        :param trend:
-        :return: Tweet
-        """
+    Parse text like
+            TIMESTAMP_UNIX_EPCH,USER
+    :param tweet_log_text:
+    :param trend:
+    :return: Tweet
+    """
     timestamp, source_user, target_user = retweet_log_text.split(",")
     created_at = datetime.fromtimestamp(float(timestamp))
     source = str(source_user)
     target = str(target_user)
 
-    return ReTweet(trend=trend, source_user=source, target_user=target, created_at=created_at)
+    return ReTweet(
+        trend=trend, source_user=source, target_user=target, created_at=created_at
+    )
 
 
 def split_by_time(trend: Trend, window_freq="1H"):
-
     tweets = sorted(trend.tweets, key=lambda t: t.created_at)
     retweets = sorted(trend.retweets, key=lambda t: t.created_at)
 
@@ -66,11 +70,15 @@ def split_by_time(trend: Trend, window_freq="1H"):
     first_event = sorted([first_tweet, first_retweet])[0]
     last_event = sorted([last_tweet, last_retweet])[-1]
 
-    first_date = datetime(first_event.year, first_event.month, first_event.day, hour=first_event.hour)
-    last_date = datetime(last_event.year, last_event.month, last_event.day, hour=last_event.hour) + timedelta(hours=1)
+    first_date = datetime(
+        first_event.year, first_event.month, first_event.day, hour=first_event.hour
+    )
+    last_date = datetime(
+        last_event.year, last_event.month, last_event.day, hour=last_event.hour
+    ) + timedelta(hours=1)
 
     range = pd.date_range(first_date, last_date, freq=window_freq)
-    windows : zip[Tuple[datetime]] = zip(range[:-2], range[1:])
+    windows: zip[Tuple[datetime]] = zip(range[:-2], range[1:])
 
     nested_elements = {}
 
@@ -98,14 +106,16 @@ def split_by_time(trend: Trend, window_freq="1H"):
         nested_elements[key]["retweets"] = inner_retweets
 
     # Only works for WINDOWS_STUDY neighbor +- burst hour
-    times = sorted(list(zip(nested_elements.keys(), nested_elements.values())), key= lambda x: datetime.fromisoformat(x[0]))
-    burst_ancla = max(times, key= lambda x: len(x[1]["tweets"]))
-
+    times = sorted(
+        list(zip(nested_elements.keys(), nested_elements.values())),
+        key=lambda x: datetime.fromisoformat(x[0]),
+    )
+    burst_ancla = max(times, key=lambda x: len(x[1]["tweets"]))
 
     n = len(times)
     index_ancla = times.index(burst_ancla)
 
     time_min_index = max([0, index_ancla - WINDOW_STUDY])
-    time_max_index = min([n,index_ancla + WINDOW_STUDY])
+    time_max_index = min([n, index_ancla + WINDOW_STUDY])
 
-    return dict(times[time_min_index:time_max_index+1])
+    return dict(times[time_min_index : time_max_index + 1])

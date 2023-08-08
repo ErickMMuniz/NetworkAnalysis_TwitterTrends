@@ -83,9 +83,9 @@ def get_edge_list_by_users(users, path=SPLIITED_MUTUAL_FOLLOWING) -> Text:
         is_valid_edge = np_any(part.isin(users), axis=1)
         many_littel_df.append(part[is_valid_edge])
 
-    ignoring_header = pd.concat(many_littel_df) \
-                            .to_string(index=False) \
-                            .split("\n")[1:] # Ignoring column names
+    ignoring_header = (
+        pd.concat(many_littel_df).to_string(index=False).split("\n")[1:]
+    )  # Ignoring column names
 
     striped_lines = list(map(lambda line: line.strip(), ignoring_header))
     result = "\n".join(striped_lines)
@@ -114,8 +114,8 @@ def read_tweets(trend: Text, path=TIMELINE_TWEETS_PATH):
                 file.close()
                 return Trend(trend=trend, tweets=tweets)
 
-def read_retweets(trend: Text, path=TIMELINE_RETWEETS_PATH):
 
+def read_retweets(trend: Text, path=TIMELINE_RETWEETS_PATH):
     with open(path, encoding="utf8") as file:
         for i, line in enumerate(file):
             maybe_hashtag = re.search(HASHTAG_RE, line.strip())
