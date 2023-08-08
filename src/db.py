@@ -1,3 +1,5 @@
+import networkx as nx
+
 from src.values import *
 from src.io import read_tweets, read_retweets, read_all_trends_names, get_edge_list_by_users
 from src.objects import *
@@ -64,13 +66,13 @@ def generate_first_neighbor_by_trend(TREND: Text):
     retweets_c = []
 
     foo = list(splited_time.keys())[:]
-    for key in foo:
-        logging.warning("[{}] importing user friends".format(TREND))
+    for i,key in enumerate(foo):
+        logging.warning("[{} / {} ----  {}] importing user friends ".format(i, len(foo), TREND))
         tweets: List[Tweet] = splited_time[key]["tweets"]
         retweets: List[ReTweet] = splited_time[key]["retweets"]
 
         users = list(map(lambda tweet: tweet.user, tweets))
-        edge_list = get_edge_list_by_users(users)
+        edge_list: Optional[Text] = get_edge_list_by_users(users)
 
         key_list.append(key)
         edge_list_primera_vecindad.append(edge_list)
@@ -82,3 +84,28 @@ def generate_first_neighbor_by_trend(TREND: Text):
 
     first_neighbor_trend_path = os.path.join(FIRST_NEIGHBOR_PATH, "{}.csv".format(TREND))
     df.to_csv(first_neighbor_trend_path, index=False)
+
+
+def generate_first_neighbor(only_labeled_trends = True):
+    assert os.path.isdir(FIRST_NEIGHBOR_PATH)
+    assert os.path.isfile(MUTUAL_FOLLOWERS_PATH)
+    assert os.path.isfile(TIMELINE_TWEETS_PATH)
+    assert os.path.isfile(TIMELINE_RETWEETS_PATH)
+
+    TRENDS = read_all_trends_names()[:]
+
+    labeled_trends = pd.read_csv(FINAL_DF_PATH)['trend'].to_list()
+    # print(trends_label["trend"].to_list())
+    logging.warning("TRENDS IMPORTED")
+    trends = list(set(TRENDS) & set(labeled_trends))
+
+    trends_format = parallel_map(generate_first_neighbor_by_trend, trends)
+
+
+def read_maybe_graph(result) -> Optional[nx.Graph]:
+    empty_graph = """Columns: [source, target]
+Index: []"""
+    if empty_graph in result:
+        return None
+    else:
+        return nx.parse_edgelist(result.split("\n"), nodetype=str)

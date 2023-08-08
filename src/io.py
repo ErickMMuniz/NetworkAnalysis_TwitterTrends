@@ -1,6 +1,7 @@
 import re
 import networkx as nx
 from tqdm import tqdm
+from numpy import any as np_any
 
 from src.values import *
 from src.objects import *
@@ -76,16 +77,19 @@ def read_users_by_trend(trend: Text, path=TIMELINE_TWEETS_PATH):
                 return Trend(trend=trend, tweets=tweets)
 
 
-def get_edge_list_by_users(users, path=MUTUAL_FOLLOWERS_PATH) -> Text:
-    USER_RE = "\d+"
-    result = ""
-    with open(path) as file:
-        for line in tqdm(file):
-            maybe_users = re.findall(USER_RE, line.strip())
-            is_valid_edge = any(map(lambda user: user in users, maybe_users))
-            if is_valid_edge:
-                result += line.strip() + "\n"
-        file.close()
+def get_edge_list_by_users(users, path=SPLIITED_MUTUAL_FOLLOWING) -> Text:
+    many_littel_df = []
+    for part in SPLIITED_MUTUAL_FOLLOWING:
+        is_valid_edge = np_any(part.isin(users), axis=1)
+        many_littel_df.append(part[is_valid_edge])
+
+    ignoring_header = pd.concat(many_littel_df) \
+                            .to_string(index=False) \
+                            .split("\n")[1:] # Ignoring column names
+
+    striped_lines = list(map(lambda line: line.strip(), ignoring_header))
+    result = "\n".join(striped_lines)
+
     return result
 
 

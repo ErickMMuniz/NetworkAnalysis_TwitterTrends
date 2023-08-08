@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Text, List, Tuple
 from datetime import datetime, timedelta
 import pandas as pd
-
+from src.values import WINDOW_STUDY
 
 class Tweet(BaseModel):
     trend: Text
@@ -97,4 +97,15 @@ def split_by_time(trend: Trend, window_freq="1H"):
         nested_elements[key]["tweets"] = inner_tweets
         nested_elements[key]["retweets"] = inner_retweets
 
-    return nested_elements
+    # Only works for WINDOWS_STUDY neighbor +- burst hour
+    times = sorted(list(zip(nested_elements.keys(), nested_elements.values())), key= lambda x: datetime.fromisoformat(x[0]))
+    burst_ancla = max(times, key= lambda x: len(x[1]["tweets"]))
+
+
+    n = len(times)
+    index_ancla = times.index(burst_ancla)
+
+    time_min_index = max([0, index_ancla - WINDOW_STUDY])
+    time_max_index = min([n,index_ancla + WINDOW_STUDY])
+
+    return dict(times[time_min_index:time_max_index+1])
