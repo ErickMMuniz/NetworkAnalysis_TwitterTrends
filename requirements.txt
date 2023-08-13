@@ -1,0 +1,7 @@
+pandas
+numpy
+matplotlib
+networkx
+pydantic
+tqdm
+notebook
