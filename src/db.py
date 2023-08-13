@@ -141,4 +141,7 @@ def read_trend_first_neighbor(trend: Optional[Text] = None):
     path = os.path.join(FIRST_NEIGHBOR_PATH, "{}.csv".format(trend))
     assert os.path.isfile(path)
 
-    return pd.read_csv(path)
+    df = pd.read_csv(path)
+    df["graph"] = df["edge_list"].apply(read_maybe_graph)
+
+    return df
