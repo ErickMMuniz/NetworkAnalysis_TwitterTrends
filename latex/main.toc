@@ -1,0 +1,36 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {chapter}{Introducción}{2}{chapter*.2}%
+\contentsline {chapter}{\numberline {1}Antecedentes}{5}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Dinámica de Poblaciones}{5}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Ecuaciones Diferenciales y Redes en Sistemas Dinámicos}{6}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}Redes de Media Social sobre Comportamiento Explosivo}{6}{subsection.1.1.2}%
+\contentsline {section}{\numberline {1.2}Comportamiento Explosivo en Redes de Media Social.}{7}{section.1.2}%
+\contentsline {chapter}{\numberline {2}Marco Teórico}{8}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Teoría de Redes.}{8}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Definiciones de Teoría de Redes}{11}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Red Multicapa y Red Temporal}{14}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3} Métricas}{15}{subsection.2.1.3}%
+\contentsline {subsubsection}{Coeficiente de agrupamiento local (\textit {clustering}) }{15}{subsubsection*.10}%
+\contentsline {subsubsection}{Valor $k-\text {núcleo}$ (\textit {k-core}) }{16}{subsubsection*.11}%
+\contentsline {subsubsection}{Métricas de Centralidad}{16}{subsubsection*.13}%
+\contentsline {subsubsection}{Centralidad intermedia (\textit {betweenness}) }{17}{subsubsection*.14}%
+\contentsline {subsubsection}{Grado de cercanía (\textit {closeness}) }{17}{subsubsection*.15}%
+\contentsline {subsubsection}{Centralidad de vector propio (\textit {eigenvector}) }{18}{subsubsection*.16}%
+\contentsline {subsubsection}{Índice de Katz }{18}{subsubsection*.17}%
+\contentsline {section}{\numberline {2.2}Sistemas Complejos.}{20}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Entropía}{21}{subsection.2.2.1}%
+\contentsline {subsubsection}{Entropía de Shannon}{21}{subsubsection*.19}%
+\contentsline {chapter}{\numberline {3}Metodología}{22}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Red de la Dinámica Total}{23}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Red Pre-Explosividad.}{24}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Datos e Implementación.}{25}{section.3.3}%
+\contentsline {chapter}{\numberline {4}Análisis y Resultados}{26}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Análisis preliminar de las tendencias.}{26}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Análisis de Comunidades.}{27}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Comunidades con comportamiento similar.}{27}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Incremento de comunidades respecto al tiempo}{29}{subsection.4.2.2}%
+\contentsline {section}{\numberline {4.3}Análisis Global de la Dinámica de las Tendencias.}{30}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1} Valores Significativos en la Dinámica Total y en el Pico de Interacción. }{31}{subsection.4.3.1}%
+\contentsline {chapter}{\numberline {5}Discusión}{34}{chapter.5}%
+\contentsline {chapter}{Conclusiones}{36}{chapter*.32}%
+\contentsline {chapter}{Referencias}{37}{table.caption.33}%

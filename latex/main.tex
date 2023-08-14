@@ -1,0 +1,249 @@
+%ERICK MUÑIZ MORALES
+\documentclass[letterpaper,spanish,12pt]{report}
+
+\usepackage[top=1in, left=1.25in, right=1.25in, bottom=1in]{geometry} % Tamaño de papel y margen
+\usepackage{bachelorstitlepageUNAM} % Portada tesis UNAM
+\usepackage{titlesec} % Quita palabra «Capítulo» de \chapter
+\titleformat{\chapter} % Config titlesec
+	{\Large\bfseries}	% 
+	{\huge \thechapter}	% 
+	{20pt}				% 
+	{\huge}				% 
+	
+\usepackage[titletoc]{appendix} % Añade palabra «Apéndice» en Índice y define el ambiente appendices
+\usepackage{cite} % Define varios tipos de entrada en archivos *.bib
+\usepackage{apacite}
+    
+\usepackage[T1]{fontenc} % Elimina advertencia Package spanish Warning: Replacing `OT1/cmr/bx/sc'
+\usepackage[mathletters]{ucs} % Unicode char; escribir directo caracteres griegos en Mathmode.
+% Es muy útil para aquellos que necesitan escribir varios caracteres griegos y se quieren evitar escribir cada vez \alpha \beta \gamma etc. Particularmente si tienen mapeado el teclado griego que en general se acomoda fonéticamente a QWERTY i.e. a=α b=β p=π m=μ r=ρ D=∆ d=δ 
+\usepackage{textgreek} % para usar caracteres griegos en mmacells (Entrada de código de Mathematica)
+\usepackage[utf8x]{inputenc} % Escribir con tildes
+\usepackage[es-tabla,es-nodecimaldot]{babel} % es-nodecimaldot es para usar punto como separador decimal en lugar de coma
+
+\usepackage{fontspec}
+\setmainfont{Alegreya}
+
+\usepackage{amsmath}
+%\DeclareMathOperator{\sinc}{sinc}
+\usepackage{rotating}
+\newsavebox{\savefig}
+\usepackage{multirow}
+%\usepackage{nicefrac}
+\usepackage{graphicx}
+
+\usepackage{mathabx}
+
+\usepackage{caption}
+\captionsetup{font=small} % Tamaño fuente 10pt en caption
+
+\usepackage[table]{xcolor} % 
+\definecolor{mathematicaSection}{RGB}{184,67,36}
+\usepackage[semicolon]{natbib}
+
+\usepackage{mmacells} % Mathematica Code Input
+% En genera para otros lenguajes de programación el paquete listings es ideal.
+\mmaSet{ % Revisar la documentación de mmaCells
+  moredefined={
+  UnitConvert, 
+  diode, cavity,
+  experimentalData,
+  rDB, nAir}
+}
+\mmaDefineMathReplacement{∆}{\textDelta}
+\mmaDefineMathReplacement{θ}{\texttheta}
+\mmaDefineMathReplacement{λ}{\textlambda}
+\mmaDefineMathReplacement{μ}{\textmugreek} 
+\mmaDefineMathReplacement{ν}{\textnu}
+\mmaDefineMathReplacement{σ}{\textsigma}
+\mmaDefineMathReplacement{->}{\(\to\)}
+%\mmaDefineMathReplacement{⟦}{[\(\!\!\)[}
+%\mmaDefineMathReplacement{⟧}{]\(\!\!\)]}
+
+\usepackage{booktabs} % Tablas de datos elegantes
+\AtBeginDocument{% Espacio entre líneas para booktabs (en general funciona sin esto, pero por el formato de la tesis debe declararse y no tuve tiempo de encontrar una mejor solución) 
+	\abovetopsep=5pt
+}
+
+\usepackage{ifthen} % \if \then \else
+\usepackage{datatool} % Importar y manejar tablas de datos e.g. *.csv
+
+\usepackage{bookmark}% Elimina advertencia Package rerunfilecheck Warning: File `output.out' has changed.
+
+\usepackage{physics,siunitx} % physics define cosas como \pdv para derivadas parciales, notación de Dirac y demás. siunitx tiene una descripción para "desesperados" en su documentación que es bastante útil.
+\sisetup{ % Config. global de Siunitx
+open-bracket = {},close-bracket = {}, % quita paréntesis de números 
+range-phrase = {\translate{ a }}, % Traduce "to" a español
+list-final-separator = {\translate{ y }}, % Traduce "and" a español
+list-pair-separator = {\translate{ y }}, % Traduce "and" a español
+%parse-numbers = false, % Poder usar formato S con datatool en tablas
+table-number-alignment = center-decimal-marker, % Alinea al centro el punto decimal en tablas
+per-mode = symbol
+}
+
+
+
+\usepackage{todonotes} % define \todo para agregar cosas por hacer en la tesis. también define \missingfigure que es útil cuando aún no se tiene la gráfica/figura/diagrama que se quiere añadir a la mano.
+
+\usepackage{hyperref} % Agrega hipervínculos al PDF. 
+% Por alguna razón a veces regresa advertencias, pero al compilar el documento una vez más desaparecen
+\usepackage{cleveref} % \cref >> \ref considera el tipo de ambiente usado.
+\crefname{table}{Tabla}{Tablas} % cambia el nombre de Cuadro a Tabla
+% En general hyperref siempre debe cargarse al final, pero la
+% documentación de cleveref pide que se cargue después de hyperref
+
+\usepackage{subfiles} % Manejo de varios archivos, por ejemplo: capítulos escritos en documentos por separado.
+% Requiere que todos los paquetes que se necesitan se carguen en el documento principal.
+% Otro paquete que sirve el mismo propósito es standalone pero requiere mayor cuidado con la sintaxis.
+
+\usepackage{setspace}
+
+%------------------------------------------
+% DEFINICION DE COMANDOS
+%------------------------------------------
+
+% Resaltado condicional para datos en tablas: equal, greater than, between
+\newcommand{\rceq}[3][]{\ifthenelse{\( \DTLiseq{#3}{#2} \) \OR \( \DTLiseq{#3}{#1} \)}{\textbf{#3}}{#3}}
+\newcommand{\rcgt}[2]{\DTLifgt{#1}{#2}{{\cellcolor[gray]{0.8}} #1}{#1}}
+\newcommand{\rcbt}[3]{\DTLifnumclosedbetween{#1}{#2}{#3}{{\cellcolor[gray]{0.8}} #1}{#1}}
+
+% Sección para código de Mathematica
+\newcommand{\mmaSec}[1]{\section*{\textcolor{mathematicaSection}{#1}}}
+% Doble paréntesis de Mathematica
+%\newcommand{\mmaPartL}[1]{	[\(\!\!\)[ }
+%\newcommand{\mmaPartR}[1]{	]\(\!\!\)] }
+
+%------------------------------------------
+% PORTADA
+%------------------------------------------
+\author{Erick Muñiz Morales}
+% \title{Comportamiento explosivo dinámico local y global en tendencias de \textit{Twitter} \textbf{(AUN ESTÁ MEDIO CHIDO)} }
+% \title{ Redes complejas : Patrones de la dinámica local y global de la dinámica sobre tendencias de \Twitter.}
+\title{Redes complejas: Dinámica del comportamiento explosivo en tendencias de Twitter. }
+
+%------------------------------------------------------------
+%------------------------------------------------------------
+%------------------------------------------------------------
+%HASTA AHORA : El de abajo es el chido.
+% Redes complejas: Dinámica del comportamiento explosivo en tendencias de Twitter. 
+%------------------------------------------------------------
+%------------------------------------------------------------
+%------------------------------------------------------------
+
+%Escrito bonito:
+%Redes complejas: Patrones DE LA DINAMICA LOCAL Y Global SOBRE TENDENCIAS DE Twitter
+%Redes complejas: Caracterización del comportamiento explosivo en tendencias de Twitter. 
+%Redes complejas: Dinámica del comportamiento explosivo en tendencia de Twitter. 
+
+\faculty{Facultad de Ciencias}
+\degree{Matemático Aplicado}
+\supervisor{Dra. Bibiana Obregón Quintana}
+\cityandyear{Ciudad Universitaria, CDMX, 2022}
+\logouni{images/Escudo-UNAM} % nombre del archivo del escudo de la universidad
+\logofac{images/Escudo-FCIENCIAS} % nombre del archivo del escudo de la facultad
+
+
+\graphicspath{{diagramas/}{fotos/}{graficas/}}% Usar gráficos de esas carpetas sin necesidad de poner el directorio completo (salvo que tengan terminación *.tex) 
+
+%---------------- COMANDOS 
+\newcommand{\G}[1]{\mathcal{G}(#1)}
+\newcommand{\Twitter}{\textit{Twitter}}
+\newcommand{\RMS}{ RMS }
+\newcommand{\enlace}{ enlace }
+
+%------------------------------------------------------------------------
+%------------------------------------------------------------------------
+%------------------------------------------------------------------------
+%------------------ BEGIN DOCUMENT --------------------------------------
+%------------------ BEGIN DOCUMENT --------------------------------------
+%------------------ BEGIN DOCUMENT --------------------------------------
+%------------------------------------------------------------------------
+%------------------------------------------------------------------------
+%------------------------------------------------------------------------
+
+\renewcommand*{\multicitedelim}{\addcomma\space}
+\begin{document}
+
+%\frontmatter
+\maketitle % Crea portada
+%\onehalfspacing
+
+\tableofcontents % Index 
+%\mainmatter 
+
+
+%------------------------------------------
+% CUERPO DE LA TESIS
+%------------------------------------------
+\chapter*{Introducción}
+
+\addcontentsline{toc}{chapter}{Introducción}  
+\subfile{capitulos/introduccion}
+
+\chapter{Antecedentes}
+\subfile{capitulos/antecedentes}
+
+\chapter{Marco Teórico}
+\subfile{capitulos/marcoteorico}
+
+\chapter{Metodología}
+\subfile{capitulos/metodologia}
+
+
+\chapter{Análisis y Resultados}
+\subfile{capitulos/resultados}
+
+\chapter{Discusión}
+\subfile{capitulos/discusion}
+
+\chapter*{Conclusiones}
+\addcontentsline{toc}{chapter}{Conclusiones} 
+\subfile{capitulos/conclusiones}
+
+% \chapter*{Conclusiones}
+% \addcontentsline{toc}{chaapter}{Conclusiones} 
+% % \chapter*{Conclusiones}
+% % \subfile{capitulos/conclusiones}
+
+% \chapter*{Trabajo Futuro}
+% \addcontentsline{toc}{chapter}{Trabajo Futuro}  
+% \subfile{capitulos/trabajofuturo}
+
+%FAL
+
+%------------------------------------------
+% APENDICES
+%------------------------------------------
+% \begin{appendices}
+% \appendix
+
+% \chapter{Ecuaciones y diagramas con Tikz}
+% \subfile{apendices/example_tikz}
+
+% \chapter{Ejemplo código Mathematica}
+% \subfile{apendices/mathematica_code}
+
+% \end{appendices}
+%------------------------------------------
+% BIBLIOGRAFIA
+%------------------------------------------
+
+% \bibliographystyle{apalike}
+\bibliographystyle{apacite}
+\addcontentsline{toc}{chapter}{Referencias}
+\bibliography{biblio.bib}
+
+% \chapter*{Anexo: Análisis de métricas generales de redes.}
+% \addcontentsline{toc}{chapter}{Anexo A: Resultados no relvantes.} 
+% \subfile{capitulos/anexos/resultados_diferentes}
+
+\end{document}
+%------------------------------------------------------------------------
+%------------------------------------------------------------------------
+%------------------------------------------------------------------------
+%------------------ BEGIN DOCUMENT --------------------------------------
+%------------------ BEGIN DOCUMENT --------------------------------------
+%------------------ BEGIN DOCUMENT --------------------------------------
+%------------------------------------------------------------------------
+%------------------------------------------------------------------------
+%------------------------------------------------------------------------
