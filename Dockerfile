@@ -20,7 +20,7 @@ RUN chmod 664 /usr/local/share/fonts/alegreya-ht-pro-full-pack-ttf/*
 RUN fc-cache -f -v
 
 COPY requirements.txt /app/requirements.txt
-RUN python -m pip install "ray[default]"
+#RUN python -m pip install "ray[default]"
 RUN python -m pip install -r requirements.txt
 
 COPY bin/ /app/bin/

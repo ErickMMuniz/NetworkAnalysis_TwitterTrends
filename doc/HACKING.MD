@@ -14,7 +14,7 @@
 ## For Python docker file
 
 ### To build 
-    docker build -r ray-docker .
+    docker build -t ray-docker .
 
 ### To run 
     docker run -v "/mnt/d/testFolder/testProgrammingProjects/networkX:/app" -it ray-docker /bin/bash
