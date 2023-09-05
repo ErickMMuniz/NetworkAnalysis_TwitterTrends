@@ -15,7 +15,8 @@ import logging
 import os
 
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Dict, Any
+from itertools import chain
 
 
 def get_trend_str(trend):
@@ -145,3 +146,57 @@ def read_trend_first_neighbor(trend: Optional[Text] = None):
     df["graph"] = df["edge_list"].apply(read_maybe_graph)
 
     return df
+
+
+def generate_extended_only_true_users(trend: Optional[Text] = None):
+    assert os.path.isdir(FIRST_NEIGHBOR_PATH)
+    STUDY = 60
+
+    df = read_trend_dump(trend)
+    t = df["dump_trend"].apply(Trend.parse_raw).iloc[0]
+
+    print("spliting times")
+    splited_time: Dict[str, Dict] = split_by_time(t, window_freq="25min", windows_study=STUDY)
+
+    # Get all users == Get user for all tweets
+    user_by_window: List[List[Text]] = list(
+        map(
+            lambda listTweets: list(map(lambda t: t.user, listTweets)),
+            map(lambda dictValues: dictValues["tweets"], splited_time.values()),
+        )
+    )
+
+    unique_users = set(list(chain.from_iterable(user_by_window)))
+    return unique_users
+
+
+def _generate_active_users_in25minutes(trend):
+    logging.warning(
+        "[BEGIN] Calculating active users in 25 minutes for {} ".format(trend)
+    )
+    path = os.path.join(
+        ACITVE_USERS_IN_15MINUTES_WINDOWS_FOLDER, "{}.txt".format(trend)
+    )
+
+    active_users = generate_extended_only_true_users(trend)
+    active_users = map(lambda user: User(id=user), active_users)
+    users_to_save = Users(value=list(active_users))
+    if not os.path.exists(path):
+        with open(path, "w") as f:
+            f.write(users_to_save.json())
+            f.close()
+
+    logging.warning("[END] trend => {} ".format(trend))
+
+
+def generate_active_users_in25minutes_windows():
+    assert os.path.isdir(ACITVE_USERS_IN_15MINUTES_WINDOWS_FOLDER)
+
+    TRENDS = read_all_trends_names()[:]
+
+    labeled_trends = pd.read_csv(FINAL_DF_PATH)["trend"].to_list()
+    # print(trends_label["trend"].to_list())
+    logging.warning("TRENDS IMPORTED")
+    trends = list(set(TRENDS) & set(labeled_trends))
+
+    trends_format = parallel_map(_generate_active_users_in25minutes, trends)

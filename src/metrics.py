@@ -4,10 +4,12 @@ from collections import Counter
 from pandas import DataFrame
 from typing import Optional
 
-def metrics_for_first_neighbor(df : DataFrame) -> DataFrame:
-    df['entropy'] = df['graph'].apply(calculate_network_entropy)
-    df['clustering'] = df['graph'].apply(calculate_network_clustering)
+
+def metrics_for_first_neighbor(df: DataFrame) -> DataFrame:
+    df["entropy"] = df["graph"].apply(calculate_network_entropy)
+    df["clustering"] = df["graph"].apply(calculate_network_clustering)
     return df
+
 
 def calculate_network_entropy(G: Optional[nx.Graph]) -> Optional[float]:
     """
@@ -32,6 +34,7 @@ def calculate_network_entropy(G: Optional[nx.Graph]) -> Optional[float]:
     entropy = np.sum(np.array(list(y)) * -np.log2(list(y)))
 
     return entropy
+
 
 def calculate_network_clustering(G: Optional[nx.Graph]) -> Optional[float]:
     """

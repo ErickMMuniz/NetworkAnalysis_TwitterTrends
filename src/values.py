@@ -23,6 +23,11 @@ TIMELINE_TWEETS_PATH: Text = os.path.join(DATA_PATH, TIMELINE_TWEETS)
 TIMELINE_RETWEETS_PATH: Text = os.path.join(DATA_PATH, TIMELINE_RETWEETS)
 FINAL_DF_PATH: Text = os.path.join(DB_PATH, FINAL_DF)
 
+EXTENDED_GRAPH_PATH: Text = os.path.join(DB_PATH, "extended_graph")
+ACITVE_USERS_IN_15MINUTES_WINDOWS_FOLDER: Text = os.path.join(
+    EXTENDED_GRAPH_PATH, "active_users_in_25minutes_windows"
+)
+
 FIRST_NEIGHBOR_PATH: Text = os.path.join(DB_PATH, "first_neighbor")
 TRENDS_DB: Text = os.path.join(DB_PATH, "timelines_trends.csv")
 

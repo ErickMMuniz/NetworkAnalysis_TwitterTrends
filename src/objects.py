@@ -5,6 +5,14 @@ import pandas as pd
 from src.values import WINDOW_STUDY
 
 
+class User(BaseModel):
+    id: Text
+
+
+class Users(BaseModel):
+    value: List[User]
+
+
 class Tweet(BaseModel):
     trend: Text
     user: Text
@@ -57,7 +65,7 @@ def to_retweet(retweet_log_text: Text, trend: Text) -> ReTweet:
     )
 
 
-def split_by_time(trend: Trend, window_freq="1H"):
+def split_by_time(trend: Trend, window_freq="1H", windows_study = WINDOW_STUDY):
     tweets = sorted(trend.tweets, key=lambda t: t.created_at)
     retweets = sorted(trend.retweets, key=lambda t: t.created_at)
 
@@ -115,7 +123,7 @@ def split_by_time(trend: Trend, window_freq="1H"):
     n = len(times)
     index_ancla = times.index(burst_ancla)
 
-    time_min_index = max([0, index_ancla - WINDOW_STUDY])
-    time_max_index = min([n, index_ancla + WINDOW_STUDY])
+    time_min_index = max([0, index_ancla - windows_study])
+    time_max_index = min([n, index_ancla + windows_study])
 
     return dict(times[time_min_index : time_max_index + 1])
