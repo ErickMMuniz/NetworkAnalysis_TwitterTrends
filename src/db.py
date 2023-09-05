@@ -6,6 +6,8 @@ from src.io import (
     read_retweets,
     read_all_trends_names,
     get_edge_list_by_users,
+    get_first_neigh,
+    get_many_user,
 )
 from src.objects import *
 from src.util import *
@@ -156,7 +158,9 @@ def generate_extended_only_true_users(trend: Optional[Text] = None):
     t = df["dump_trend"].apply(Trend.parse_raw).iloc[0]
 
     print("spliting times")
-    splited_time: Dict[str, Dict] = split_by_time(t, window_freq="25min", windows_study=STUDY)
+    splited_time: Dict[str, Dict] = split_by_time(
+        t, window_freq="25min", windows_study=STUDY
+    )
 
     # Get all users == Get user for all tweets
     user_by_window: List[List[Text]] = list(
@@ -200,3 +204,41 @@ def generate_active_users_in25minutes_windows():
     trends = list(set(TRENDS) & set(labeled_trends))
 
     trends_format = parallel_map(_generate_active_users_in25minutes, trends)
+
+
+def generate_valid_users_for_extended_graph():
+    assert os.path.isdir(ACITVE_USERS_IN_15MINUTES_WINDOWS_FOLDER)
+    TRENDS = read_all_trends_names()[:]
+
+    labeled_trends = pd.read_csv(FINAL_DF_PATH)["trend"].to_list()
+    # print(trends_label["trend"].to_list())
+    logging.warning("TRENDS IMPORTED")
+    trends = list(set(TRENDS) & set(labeled_trends))
+
+    def run(trend):
+        logging.warning("[BEGIN] Calculating valid for \t {} ".format(trend))
+        path = os.path.join(
+            ACITVE_USERS_IN_15MINUTES_WINDOWS_FOLDER, "{}.txt".format(trend)
+        )
+        assert os.path.exists(path)
+        with open(path, "r") as f:
+            lines = "\n".join(f.readlines())
+            f.close()
+            users = Users.parse_raw(lines)
+            users = list(map(lambda user: user.id, users.value))
+            users = get_many_user(users)
+            users = map(lambda user: User(id=user), users)
+            users_to_save = Users(value=list(users))
+            path_to_save = os.path.join(VALID_USER, "{}.txt".format(trend))
+        if not os.path.exists(path_to_save):
+            with open(path_to_save, "w") as s:
+                s.write(users_to_save.json())
+                s.close()
+        logging.warning("[END] valid users for => \t {} ".format(trend))
+
+    # parallel_map(run, trends)
+    for i,trend in enumerate(trends):
+        print("trend => {} \t  {} / {}".format(trend, i, len(trends)))
+        path_to_save = os.path.join(VALID_USER, "{}.txt".format(trend))
+        if not os.path.exists(path_to_save):
+            run(trend)

@@ -1,10 +1,14 @@
 import re
 import networkx as nx
+import pandas as pd
 from tqdm import tqdm
 from numpy import any as np_any
+from numpy import concatenate, unique
+from logging import warning
 
 from src.values import *
 from src.objects import *
+from src.random import choice
 
 
 def read_and_parse_mutual_followers_dat(path: Text, limit_lines=100) -> nx.Graph:
@@ -75,6 +79,41 @@ def read_users_by_trend(trend: Text, path=TIMELINE_TWEETS_PATH):
                 )
                 file.close()
                 return Trend(trend=trend, tweets=tweets)
+
+
+def get_first_neigh(users: List[Text], path=SPLIITED_MUTUAL_FOLLOWING):
+    many_littel_df = []
+    for part in SPLIITED_MUTUAL_FOLLOWING:
+        is_valid_edge = np_any(part.isin(users), axis=1)
+        many_littel_df.append(part[is_valid_edge])
+    ignoring_header = pd.concat(many_littel_df)
+
+    source = ignoring_header["source"].unique()
+    target = ignoring_header["target"].unique()
+
+    uniques_users = unique(concatenate([source, target]))
+    return uniques_users
+
+
+def get_many_user(users: List[Text]):
+    warning("[calculating networks with ] \t n = {} ".format(len(users)))
+    if len(users) < MAX_RECURSIVE_EXTENDED_GRAPH:
+        users_and_neigh = get_first_neigh(users)
+        users_to_add = list(set(users_and_neigh) - set(users))
+        ## Validator:
+        if (
+            int(len(users_to_add) * 0.10) > 500
+        ):  # This is in order to iterate many steps
+            users_to_add = choice(users_to_add, 500)
+            users_and_neigh = unique(concatenate([users, users_to_add]))
+            return get_many_user(users_and_neigh)
+        else:
+            n = int(len(users_to_add) * 0.10)
+            users_to_add = choice(users_to_add, n)
+            users_and_neigh = unique(concatenate([users, users_to_add]))
+            return get_many_user(users_and_neigh)
+    else:
+        return users
 
 
 def get_edge_list_by_users(users, path=SPLIITED_MUTUAL_FOLLOWING) -> Text:

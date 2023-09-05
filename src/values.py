@@ -3,8 +3,12 @@ from typing import Text
 from pandas import read_csv
 from numpy import array_split
 
+SEED = 11245
+
 MINIMUN_TWEETS = 4000
 WINDOW_STUDY = 30
+
+MAX_RECURSIVE_EXTENDED_GRAPH = 20000
 
 HASHTAG_RE: Text = "\w+(?=\s)"
 TWEET_LOG_RE: Text = "\d+,\d+"
@@ -27,6 +31,7 @@ EXTENDED_GRAPH_PATH: Text = os.path.join(DB_PATH, "extended_graph")
 ACITVE_USERS_IN_15MINUTES_WINDOWS_FOLDER: Text = os.path.join(
     EXTENDED_GRAPH_PATH, "active_users_in_25minutes_windows"
 )
+VALID_USER: Text = os.path.join(EXTENDED_GRAPH_PATH, "valid_users")
 
 FIRST_NEIGHBOR_PATH: Text = os.path.join(DB_PATH, "first_neighbor")
 TRENDS_DB: Text = os.path.join(DB_PATH, "timelines_trends.csv")

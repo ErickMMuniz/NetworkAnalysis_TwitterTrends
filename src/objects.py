@@ -65,7 +65,7 @@ def to_retweet(retweet_log_text: Text, trend: Text) -> ReTweet:
     )
 
 
-def split_by_time(trend: Trend, window_freq="1H", windows_study = WINDOW_STUDY):
+def split_by_time(trend: Trend, window_freq="1H", windows_study=WINDOW_STUDY):
     tweets = sorted(trend.tweets, key=lambda t: t.created_at)
     retweets = sorted(trend.retweets, key=lambda t: t.created_at)
 
