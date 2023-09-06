@@ -7,7 +7,7 @@ from src.io import (
     read_all_trends_names,
     get_edge_list_by_users,
     get_first_neigh,
-    get_many_user,
+    get_many_user, read_mutual_follow_graph,
 )
 from src.objects import *
 from src.util import *
@@ -242,3 +242,38 @@ def generate_valid_users_for_extended_graph():
         path_to_save = os.path.join(VALID_USER, "{}.txt".format(trend))
         if not os.path.exists(path_to_save):
             run(trend)
+
+def read_extended_valid_users(trend) -> List[Text]:
+    path = os.path.join(VALID_USER, "{}.txt".format(trend))
+
+    assert os.path.exists(path)
+    users_to_find = []
+    with open(path, "r") as f:
+        lines = "\n".join(f.readlines())
+        users: List[User] = Users.parse_raw(lines).value
+        users_to_find = map(lambda u: u.id, users)
+        f.close()
+    return users_to_find
+
+
+def generate_extended_graph(number_chunks = -1):
+    assert os.path.exists(EXTENDED_GRAPHS)
+
+    G_mutual = read_mutual_follow_graph(number_chunks)
+
+    TRENDS = read_all_trends_names()[:]
+
+    labeled_trends = pd.read_csv(FINAL_DF_PATH)["trend"].to_list()
+    logging.warning("TRENDS IMPORTED")
+    trends = list(set(TRENDS) & set(labeled_trends))
+
+    def run(trend):
+        users_to_find = read_extended_valid_users(trend)
+        subgraph = G_mutual.subgraph(users_to_find)
+
+        path_graph = os.path.join(EXTENDED_GRAPHS, "{}.gefx".format(trend))
+        if not os.path.exists(path_graph):
+            nx.write_gexf(subgraph,path_graph)
+
+    for trend in trends:
+        run(trend)
