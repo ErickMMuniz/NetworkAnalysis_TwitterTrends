@@ -152,14 +152,14 @@ def read_trend_first_neighbor(trend: Optional[Text] = None):
 
 def generate_extended_only_true_users(trend: Optional[Text] = None):
     assert os.path.isdir(FIRST_NEIGHBOR_PATH)
-    STUDY = 60
+    STUDY = 50
 
     df = read_trend_dump(trend)
     t = df["dump_trend"].apply(Trend.parse_raw).iloc[0]
 
     print("spliting times")
     splited_time: Dict[str, Dict] = split_by_time(
-        t, window_freq="25min", windows_study=STUDY
+        t, windows_study=STUDY
     )
 
     # Get all users == Get user for all tweets
@@ -193,7 +193,7 @@ def _generate_active_users_in25minutes(trend):
     logging.warning("[END] trend => {} ".format(trend))
 
 
-def generate_active_users_in25minutes_windows():
+def generate_active_users_inOneHour_windows():
     assert os.path.isdir(ACITVE_USERS_IN_15MINUTES_WINDOWS_FOLDER)
 
     TRENDS = read_all_trends_names()[:]
