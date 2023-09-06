@@ -6,3 +6,4 @@ pydantic
 tqdm
 notebook
 black
+tabulate

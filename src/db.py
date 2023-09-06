@@ -7,7 +7,8 @@ from src.io import (
     read_all_trends_names,
     get_edge_list_by_users,
     get_first_neigh,
-    get_many_user, read_mutual_follow_graph,
+    get_many_user,
+    read_mutual_follow_graph,
 )
 from src.objects import *
 from src.util import *
@@ -158,9 +159,7 @@ def generate_extended_only_true_users(trend: Optional[Text] = None):
     t = df["dump_trend"].apply(Trend.parse_raw).iloc[0]
 
     print("spliting times")
-    splited_time: Dict[str, Dict] = split_by_time(
-        t, windows_study=STUDY
-    )
+    splited_time: Dict[str, Dict] = split_by_time(t, windows_study=STUDY)
 
     # Get all users == Get user for all tweets
     user_by_window: List[List[Text]] = list(
@@ -237,11 +236,12 @@ def generate_valid_users_for_extended_graph():
         logging.warning("[END] valid users for => \t {} ".format(trend))
 
     # parallel_map(run, trends)
-    for i,trend in enumerate(trends):
+    for i, trend in enumerate(trends):  # TODO: Parallel running dont working
         print("trend => {} \t  {} / {}".format(trend, i, len(trends)))
         path_to_save = os.path.join(VALID_USER, "{}.txt".format(trend))
         if not os.path.exists(path_to_save):
             run(trend)
+
 
 def read_extended_valid_users(trend) -> List[Text]:
     path = os.path.join(VALID_USER, "{}.txt".format(trend))
@@ -256,7 +256,7 @@ def read_extended_valid_users(trend) -> List[Text]:
     return users_to_find
 
 
-def generate_extended_graph(number_chunks = -1):
+def generate_extended_graph(number_chunks=-1):
     assert os.path.exists(EXTENDED_GRAPHS)
 
     G_mutual = read_mutual_follow_graph(number_chunks)
@@ -268,12 +268,26 @@ def generate_extended_graph(number_chunks = -1):
     trends = list(set(TRENDS) & set(labeled_trends))
 
     def run(trend):
+        logging.warning("[BEGIN] \t -> \t {}".format(trend))
         users_to_find = read_extended_valid_users(trend)
         subgraph = G_mutual.subgraph(users_to_find)
 
         path_graph = os.path.join(EXTENDED_GRAPHS, "{}.gefx".format(trend))
         if not os.path.exists(path_graph):
-            nx.write_gexf(subgraph,path_graph)
+            nx.write_gexf(subgraph, path_graph)
+        logging.warning("[END] \t -> \t {}".format(trend))
 
-    for trend in trends:
+    for trend in trends:  # TODO: Parallel running dont worki
         run(trend)
+
+
+def save_calculated_extended_graph(G: nx.Graph, trend: Text):
+    assert os.path.exists(CALCULATED_GRAPH)
+    path = os.path.join(CALCULATED_GRAPH, "{}.gefx".format(trend))
+    nx.write_gexf(G, path=path)
+
+
+def read_extended_simple_graph(trend: Text) -> nx.Graph:
+    path_graph = os.path.join(EXTENDED_GRAPHS, "{}.gefx".format(trend))
+    assert os.path.exists(path_graph)
+    return nx.read_gexf(path_graph)

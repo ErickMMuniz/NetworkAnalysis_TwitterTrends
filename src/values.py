@@ -33,6 +33,7 @@ ACITVE_USERS_IN_15MINUTES_WINDOWS_FOLDER: Text = os.path.join(
 )
 VALID_USER: Text = os.path.join(EXTENDED_GRAPH_PATH, "valid_users")
 EXTENDED_GRAPHS: Text = os.path.join(EXTENDED_GRAPH_PATH, "graphs")
+CALCULATED_GRAPH: Text = os.path.join(EXTENDED_GRAPH_PATH, "calculated_graphs")
 
 FIRST_NEIGHBOR_PATH: Text = os.path.join(DB_PATH, "first_neighbor")
 TRENDS_DB: Text = os.path.join(DB_PATH, "timelines_trends.csv")

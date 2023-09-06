@@ -21,18 +21,16 @@ def read_and_parse_mutual_followers_dat(path: Text, limit_lines=100) -> nx.Graph
             print(maybe_users)
 
 
-def read_mutual_follow_graph(number_parts = -1):
+def read_mutual_follow_graph(number_parts=-1):
     logging.warning("[MUTUAL FOLLOW GRAPH] Reading")
     path = os.path.exists(MUTUAL_FOLLOWERS_PATH)
     assert path
 
-    compose_graph = nx.Graph() # Empty graph
+    compose_graph = nx.Graph()  # Empty graph
 
     for part in enumerate(SPLIITED_MUTUAL_FOLLOWING[:number_parts]):
         logging.warning("[compuse] G actual state {}".format(compose_graph.__str__()))
-        df = (
-            part[1].astype(str)
-        )
+        df = part[1].astype(str)
         G = nx.from_pandas_edgelist(df)
 
         compose_graph = nx.compose(compose_graph, G)
