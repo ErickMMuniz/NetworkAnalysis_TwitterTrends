@@ -1,3 +1,4 @@
+import logging
 import re
 import networkx as nx
 import pandas as pd
@@ -18,6 +19,26 @@ def read_and_parse_mutual_followers_dat(path: Text, limit_lines=100) -> nx.Graph
             assert i < limit_lines
             maybe_users = re.findall(USER_RE, line.strip())
             print(maybe_users)
+
+
+def read_mutual_follow_graph(number_parts = -1):
+    logging.warning("[MUTUAL FOLLOW GRAPH] Reading")
+    path = os.path.exists(MUTUAL_FOLLOWERS_PATH)
+    assert path
+
+    compose_graph = nx.Graph() # Empty graph
+
+    for part in enumerate(SPLIITED_MUTUAL_FOLLOWING[:number_parts]):
+        logging.warning("[compuse] G actual state {}".format(compose_graph.__str__()))
+        df = (
+            part[1].astype(str)
+        )
+        G = nx.from_pandas_edgelist(df)
+
+        compose_graph = nx.compose(compose_graph, G)
+    logging.warning("[COMPOSE] G actual state {}".format(compose_graph.__str__()))
+    logging.warning("[MUTUAL FOLLOW GRAPH] SAVING IN G")
+    return compose_graph
 
 
 def read_all_trends_names(path=TIMELINE_TWEETS_PATH):
