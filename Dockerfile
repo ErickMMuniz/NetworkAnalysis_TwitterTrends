@@ -22,6 +22,7 @@ RUN fc-cache -f -v
 COPY requirements.txt /app/requirements.txt
 #RUN python -m pip install "ray[default]"
 RUN python -m pip install -r requirements.txt
+RUN pip3 install networkit
 
 COPY bin/ /app/bin/
 RUN chmod +x bin/.

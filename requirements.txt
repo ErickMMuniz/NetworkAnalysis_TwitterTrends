@@ -5,3 +5,4 @@ networkx
 pydantic
 tqdm
 notebook
+black
