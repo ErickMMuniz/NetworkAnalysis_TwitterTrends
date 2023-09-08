@@ -4,6 +4,7 @@ from pandas import read_csv
 from numpy import array_split
 
 SEED = 11245
+ALEGREYA = "Alegreya"
 
 MINIMUN_TWEETS = 4000
 WINDOW_STUDY = 30
