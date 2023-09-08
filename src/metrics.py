@@ -1,11 +1,14 @@
 import networkx as nx
 import networkit as nk
 import numpy as np
+import logging
 from collections import Counter
-from pandas import DataFrame
+from pandas import DataFrame, read_csv
 from typing import Optional
 
 from src.db import read_extended_simple_graph, save_calculated_extended_graph
+from src.values import *
+from src.io import read_all_trends_names
 
 
 def metrics_for_first_neighbor(df: DataFrame) -> DataFrame:
@@ -74,14 +77,25 @@ def calculate_network_clustering(G: Optional[nx.Graph]) -> Optional[float]:
     return nx.average_clustering(G)
 
 
-def calculate_all_metrics(trend):
+def calculate_all_metrics():
     """
     General funtion to read all trends and make all calculates
 
     :return:
     """
 
+    TRENDS = read_all_trends_names()[:]
+
+    labeled_trends = read_csv(FINAL_DF_PATH)["trend"].to_list()
+    logging.warning("TRENDS IMPORTED")
+    trends = list(set(TRENDS) & set(labeled_trends))
+
     def run(trend):
         G = read_extended_simple_graph(trend)
         g_calculated = metrics_for_extended_graph(G)
         save_calculated_extended_graph(g_calculated, trend)
+
+    for trend in trends:
+        logging.warning("[METRICS] BEGIN -> \t {}".format(trend))
+        run(trend)
+        logging.warning("[METRICS] END -> \t {}".format(trend))
