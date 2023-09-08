@@ -272,7 +272,7 @@ def generate_extended_graph(number_chunks=-1):
         users_to_find = read_extended_valid_users(trend)
         subgraph = G_mutual.subgraph(users_to_find)
 
-        path_graph = os.path.join(EXTENDED_GRAPHS, "{}.gefx".format(trend))
+        path_graph = os.path.join(EXTENDED_GRAPHS, "{}.gexf".format(trend))
         if not os.path.exists(path_graph):
             nx.write_gexf(subgraph, path_graph)
         logging.warning("[END] \t -> \t {}".format(trend))
@@ -283,11 +283,11 @@ def generate_extended_graph(number_chunks=-1):
 
 def save_calculated_extended_graph(G: nx.Graph, trend: Text):
     assert os.path.exists(CALCULATED_GRAPH)
-    path = os.path.join(CALCULATED_GRAPH, "{}.gefx".format(trend))
+    path = os.path.join(CALCULATED_GRAPH, "{}.gexf".format(trend))
     nx.write_gexf(G, path=path)
 
 
 def read_extended_simple_graph(trend: Text) -> nx.Graph:
-    path_graph = os.path.join(EXTENDED_GRAPHS, "{}.gefx".format(trend))
+    path_graph = os.path.join(EXTENDED_GRAPHS, "{}.gexf".format(trend))
     assert os.path.exists(path_graph)
     return nx.read_gexf(path_graph)
