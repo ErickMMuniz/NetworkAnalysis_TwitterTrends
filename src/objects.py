@@ -123,7 +123,13 @@ def split_by_time(trend: Trend, window_freq="1H", windows_study=WINDOW_STUDY):
     n = len(times)
     index_ancla = times.index(burst_ancla)
 
-    time_min_index = max([0, index_ancla - windows_study])
-    time_max_index = min([n, index_ancla + windows_study])
+    if windows_study == None:
+        delta_min = index_ancla
+        delta_max = n - index_ancla
+    else:
+        delta_min = delta_max = windows_study
+
+    time_min_index = max([0, index_ancla - delta_min])
+    time_max_index = min([n, index_ancla + delta_max])
 
     return dict(times[time_min_index : time_max_index + 1])

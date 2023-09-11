@@ -19,14 +19,20 @@ FOLLOWER_GCC: Text = "follower_gcc.anony.dat"
 TIMELINE_TWEETS: Text = "timeline_tag.anony.dat"
 TIMELINE_RETWEETS: Text = "timeline_tag_rt.anony.dat"
 FINAL_DF: Text = "finaldf.csv"
+LABELED_TRENDS_BY_TIME_SERIES: Text = "label-studio-labeled.csv"
 
 DATA_PATH: Text = os.path.join(os.getcwd(), "data")
 DB_PATH: Text = os.path.join(os.getcwd(), "db")
+ANALYSIS_PATH: Text = os.path.join(os.getcwd(), "analysis")
+
+LABELED_TRENDS = os.path.join(DB_PATH, LABELED_TRENDS_BY_TIME_SERIES)
 
 MUTUAL_FOLLOWERS_PATH: Text = os.path.join(DATA_PATH, FOLLOWER_GCC)
 TIMELINE_TWEETS_PATH: Text = os.path.join(DATA_PATH, TIMELINE_TWEETS)
 TIMELINE_RETWEETS_PATH: Text = os.path.join(DATA_PATH, TIMELINE_RETWEETS)
 FINAL_DF_PATH: Text = os.path.join(DB_PATH, FINAL_DF)
+
+TIME_SERIES_COMPLETE = os.path.join(ANALYSIS_PATH, "time-series")
 
 EXTENDED_GRAPH_PATH: Text = os.path.join(DB_PATH, "extended_graph")
 ACITVE_USERS_IN_15MINUTES_WINDOWS_FOLDER: Text = os.path.join(
