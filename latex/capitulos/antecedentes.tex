@@ -1,0 +1,113 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\onehalfspacing
+
+En este capítulo se mostrará un breve panorama de las investigaciones previas en torno al comportamiento explosivo en la dinámica de poblaciones. 
+
+Las secciones de este capítulo son la dinámica de poblaciones, ecuaciones diferenciales y redes en sistemas dinámicos, redes de media social sobre comportamiento de comunidades y, por último,  el comportamiento explosivo en redes de media social.
+
+\section{Dinámica de Poblaciones}
+
+%% Esta es la base más teórica.
+
+Las especies son producto de la evolución que, en diferentes escalas, conforman las comunidades de organismos vivientes del planeta Tierra [\cite{begon2009population}]. Al conjunto de varias especies de individuos se le denomina \textit{población}. Las poblaciones pueden mostrar un rango de patrones dinámicos en su estructura; por ejemplo, cambiar el número de individuos [\cite{Dimitrova2000, MT_MAY}]. 
+
+Ahora bien, estos patrones dinámicos de población pueden ser vistos desde dos perspectivas: cuantitativa y cualitativa. Por un lado, una descripción cuantitativa involucra datos descriptivos para medir tendencias. Por otro lado, una descripción cualitativa permite encontrar relaciones de causalidad entre procesos físicos y la población. 
+
+%% Tal vez agregar un ejemplo representativo
+
+El aspecto principal del estudio de la dinámica de poblaciones es identificar factores dependientes de la cantidad de individuos y la tasa de crecimiento de este número. En términos prácticos, el estudio de la dinámica de poblaciones se ha desarrollado desde un punto de vista demográfico [\cite{PopulationDynamixsStevenAJuliano}]. Es decir, definir una serie de estados donde los individuos pueden fluctuar de un estado a otro.  
+
+Sin embargo, las relaciones entre los estados donde fluctúan los usuarios no consideran de forma explícita las interrelaciones entre el ambiente y el individuo. En efecto, los factores exógenos pueden ser una causa de la dinámica  de población [\cite{GINN2007325}]. 
+
+
+Finalmente, la capacidad de entender patrones de comportamiento, a través del comportamiento de especies individuales y cómo estos se relacionan en su ambiente, permitiría predecir los cambios la población. 
+
+
+% Finalmente, la capacidad de entender patrones de comportamiento a tra
+
+% ' Ifwe are to understand such patterns
+% and be able ultimately to predict changes in them.
+% then our initial focus must be on the individual species
+% themselves and the manner in which populations
+% respond to internal and external ecological factors
+
+\subsection{Ecuaciones Diferenciales y Redes en Sistemas Dinámicos}
+
+%% Esto retoma las ideas de del párrafo anterior pero lo elacionamos a redes. 
+
+La bibliografía muestra que los primeros modelos sobre la dinámica de poblaciones utilizan sistemas de ecuaciones diferenciales [\cite{MT_MAY,royanderson1992,Dimitrova2000}]. Estos primeros modelos se basan en el mismo principio de la fluctuación de personas a través de estados. 
+
+El uso de ecuaciones diferenciales permite aplicar esta metodología de fluctuación de estados en diferentes campos de investigación. Por ejemplo,  en el modelo de epidemias SIR, los estados son susceptible, infectado y recuperado [\cite{royanderson1992}], donde una persona puede transitar de un estado susceptible a infectado o de infectado a recuperado. En otro ejemplo, basado en migración, los estados pueden representar localidades, estados o naciones [\cite{Dimitrova2000,MT_MAY,Olsson1965}], donde las personas pueden transitar al cambiar de ubicación. 
+
+Varias de estas modelaciones generan patrones sobre el comportamiento de la población al modificar los parámetros del sistema [\cite{Dimitrova2000}]. 
+Sin embargo, los patrones no siempre resultan cuando el modelo se aplica a un sistema de otra población con características similares. Esto último en consecuencia de la  omisión de varios supuestos; en particular, no todas las comunidades, ni los individuos pertenecientes a ellas, tienen el mismo comportamiento [\cite{Keeling2005}].
+
+No obstante, la implementación de la teoría de redes complejas permite solucionar estos problemas. Esto es debido a que las conexiones de cada población son explícitas en la red definida, mientras que la red que se genera proporciona información sobre la dinámica epidemiológica [\cite{danon2011networks}]. 
+
+Los modelos basados en redes engloban varios enfoques sobre la topología de la red. Por ejemplo, se presentan modelos teóricos que abarcan coeficientes de agrupamiento y modularidad necesarios para obtener una transmisión de información con menor costo de relaciones [\cite{Watts1998, Nematzadeh2014}].
+
+
+% del artículo de Strogatz y Watts \cite{Watts1998}, así como  el artículo de Newman  y  Girvan \cite{Nematzadeh2014}, presentan modelos teóricos que abarcan coeficientes de agrupamiento y modularidad necesarios para obtener una transmisión de información con menor costo de relaciones; donde se concluye una agrupación necesaria de los comunicantes. En consecuencia, debido a que la agrupación solo es posible a través de triangulaciones, nacen intuiciones sobre la existencia de aristas puente en la red. 
+
+\subsection{Redes de Media Social sobre Comportamiento Explosivo}
+
+
+La relación entre los modelos citados anteriormente y la dinámica de las redes de media social (\RMS), es considerar dos estados: usuario activo y usuario inactivo. Es decir, un usuario inactivo se convierte en activo cuando realiza una interacción. 
+
+Esta idea ha llevado a algunos a implementar diversos análisis generales. Por un lado, se desarrollaron análisis estadísticos en función de la cantidad de  interacciones específicas de un cierto tópico [\cite{an_Twitter_Zubiaga2014}]. Por otro lado, usando sistemas de ecuaciones diferenciales, se ha implementado un modelo para ajustar la serie de tiempo sobre el comportamiento de las interacciones activas e inactivas [\cite{an_Twitter_dinamics}]. 
+
+
+
+
+Los modelos de redes aplicados en \RMS resultan ser más efectivos para estudiar y analizar registros precisos de flujos de información [\cite{Miller2011}]. De hecho, los registros y los modelos de redes llevaron a investigaciones sobre el comportamiento de comunidades [\cite{REDDIT, D_Weng2013}], enfocados en la estructura de la red generada por los usuarios activos [\cite{D_weng2014predicting}].
+
+
+% Sin embargo, los modelos basados en métodos estadísticos y de ecuaciones diferenciales ignoran la forma de interacción entre los usuarios . Indagar en este problema dedicado en la topología de los usuarios es posible debido a los avances tecnológicos actuales donde se conoce un camino preciso de la información \cite{Miller2011}. Por lo tanto, se puede aplicar la metodología aplicada de redes debido al conocimiento explícito de la topología.  
+
+
+
+\section{Comportamiento Explosivo en Redes de Media Social.}
+
+Un comportamiento en \RMS interesante es aquel que, sin una causa aparente, adquiere un alto volumen de actividad en poco tiempo y, de forma gradual, su intensidad se hace nula. A este comportamiento se le denomina comportamiento explosivo.  
+
+El comportamiento explosivo es un fenómeno existente en diversos campos de la ciencia, cabe mencionar, es contrario a modelaciones de procesos de Poisson [\cite{Barabsi2005}]. En estudios de ciencias sociales, se han encontrado dos posibles causas de este tipo de comportamiento que son el limitado tiempo de realizar tareas cotidianas [\cite{Miritello2013}] y la priorización de las mismas [\cite{Barabsi2005}]. 
+
+% Esto último como una posible consecuencia  del limitado tiempo que tiene cada usuario \cite{Miritello2013} y de la organización de tareas por prioridad \cite{Barabsi2005}.
+
+Ahora bien, las redes de media social no son la excepción ante este comportamiento y, mucho menos, al estudio del mismo. Se ha mostrado que el comportamiento explosivo puede provenir de un ataque coordinado entre varios iniciadores de distintas comunidades [\cite{D_weng2014predicting,D_Weng2013, Lerman2016}]. Sin embargo, estas últimas modelaciones se basan en una construcción local sobre los primeros usuarios relacionados con usuarios activos. 
+
+Aunado a esto último, también son necesarias interacciones de menor esfuerzo para que el comportamiento sea explosivo  [\cite{Model_Fabrega_regresion,Model_retweets_inproceedings}]. 
+
+
+% Sin embargo, sobre estos estados se asume que la relaciones internas (entre los agentes del sistema) es homogénea.
+
+% El término \textit{no lineal} es usado la necesidad de que dichos estados tengan una relación entre ellos mismos, pero no se espera que la interacción entre la  población del sistema sea homogénea y constante a través del tiempo \cite{Barabsi2005}
+
+
+
+ 
+
+
+
+% La relación entre estos modelos y la dinámica de las \RMS, es considerar dos estados: usuario activo y usuario inactivo. Es decir, un usuario es activo cuando realiza una interacción. Esta idea ha llevado a algunos a implementar análisis estadísticos en función de la cantidad de ciertas interacciones de un cierto tópico \cite{an_Twitter_Zubiaga2014}. Por otro lado, usando sistemas de ecuaciones diferenciales, se ha implementado un modelo para ajustar la serie de tiempo de sobre el comportamiento de sus interacciones \cite{an_Twitter_dinamics}. 
+
+
+% Sin embargo, los modelos basados en métodos estadísticos y de ecuaciones diferenciales ignoran la forma de interacción entre los usuarios. Indagar en este problema dedicado en la topología de los usuarios es posible debido a los avances tecnológicos actuales donde se conoce un camino preciso de la información \cite{Miller2011}. Por lo tanto, se puede aplicar la metodología aplicada de redes debido al conocimiento explícito de la topología.  
+
+% Los modelos basados en redes engloba varios enfoques sobre la topología de la red. En primer lugar, del artículo de Strogatz y Watts \cite{Watts1998}, así como  el artículo de Newman  y  Girvan \cite{Nematzadeh2014}, presentan modelos teóricos que abarcan coeficientes de agrupamiento y modularidad necesarios para obtener una transmisión de información con menor costo de relaciones; donde se concluye una agrupación necesaria de los comunicantes. En consecuencia, debido a que la agrupación solo es posible a través de triangulaciones nacen intuiciones sobre la existencia de aristas puente en la red. 
+
+% %Definir la definición de comportamiento explosivo
+% Se ha mostrado que el comportamiento explosivo puede provenir de un ataque coordinado entre varios iniciadores de distintas comunidades \cite{D_weng2014predicting,D_Weng2013, Lerman2016}. Sin embargo, estas últimas modelaciones se basan en una construcción local a una primera vecindad. Aunado a esto último, también es necesaria la interacción de menor esfuerzo para que el comportamiento sea explosivo  \cite{Model_Fabrega_regresion,Model_retweets_inproceedings}. Esto último como una posible consecuencia  del limitado tiempo que tiene cada usuario \cite{Miritello2013} y de la organización de tareas por prioridad \cite{Barabsi2005}.
+
+% Esto último como consecuencia de diversos problemas actuales que implican hacer eficiente el uso de los recursos limitados \cite{Barabsi2005}.
+
+\end{document}
+
+
+ Pues, por lo antes discutido, estos sistemas son  complejos debido  a que la interacción de los usuarios está gobernada por las leyes de la interacción social: los usuarios o agentes no tienen un  líder que guíe a los demás \cite{Miritello2013}. Aunado a ello, sin importar el sistema a estudiar, cada usuario cuenta con la liberta de utilizar su recurso del tiempo \cite{Miritello2013}.
+ 
+ 
+ ; aquí obtenemos un umbral para el agrupamiento de los comunicantes

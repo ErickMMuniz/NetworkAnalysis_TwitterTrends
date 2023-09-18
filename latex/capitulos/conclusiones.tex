@@ -1,0 +1,91 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+
+%Discusiók => después las conclusiones
+
+
+
+
+\onehalfspacing
+
+El objetivo de esta tesis era encontrar una diferencia en las redes sociales de cada tendencia por su propiedad de explosividad. En otras palabras, se buscaba un patrón en la red a fin de identificar la explosividad de la tendencia en función de la red social de los participantes. 
+
+
+%Tal vez un parrafo o dos 
+% Poner el trabajo que se hizo
+    % - Como hacer un resumen
+    %  Párrafo d
+De los resultados, se tienen varios diferenciadores entre las tendencias con comportamiento explosivo de las que no lo son. Estas diferencias se pueden resumir con el siguiente cuadro. 
+
+\begin{table}[h!]
+    \centering
+    \caption{Comparativo de los resultados por propiedad de explosividad}
+    \begin{tabular}{c|c}
+        \textbf{Comportamiento explosivo} & \textbf{Comportamiento no explosivo} \\
+        \hline
+        La entropía es menor & La entropía es mayor \\
+        El número de comunidades es mayor & El número de comunidades es menor \\
+        El \textit{K-core} menos variable & \textit{K-core} variable
+        
+    \end{tabular}
+    
+    \label{tab:conclusiones_comparativo}
+\end{table}
+    
+    
+Una de las conclusiones importantes es que pudieron identificarse las características más relevantes como: el tiempo entre cada interacción, el número de interacciones y la cantidad de comunidades. Dichas características permiten diferenciar tendencias con comportamiento explosivo o sin comportamiento explosivo.
+
+Por último, se concluye que el comportamiento explosivo es influenciado por la cantidad de pequeñas comunidades con características similares; y el tiempo en el cual están interactuando; es decir, está influenciada por la topología e interacción coordinada de la red generada de los comunicantes. Las características más relevantes son el tiempo entre cada interacción, número de interacciones y la cantidad de comunidades. Los resultados obtenidos en esta tesis  son consistentes con la literatura reportada \cite{D_Weng2013,D_weng2014predicting}.
+
+%QUERO METER ESTA INFO Y NO 'SE COMO
+
+% Sin numeroacion
+\section*{Trabajo futuro}
+
+En esta sección se hace una propuesta considerando las limitantes encontradas en el trabajo que se realizó. 
+
+La primera limitante fue la sobre simplificación al considerar los enlaces no dirigidos. Sin embargo, los \textit{influencers} tienen una gran cantidad de seguidores que ellos no necesariamente siguen. Por lo tanto, una propuesta de investigación es analizar estos casos con relaciones dirigidas. 
+
+
+% Una de las limitantes fue la sobre simplificación de los enlaces al considerar una relación no dirigida. Este comportamiento no es esperable en la mayoría de las cuentas actuales y los comportamientos explosivos siguen apareciendo. Una propuesta de investigación es analizar estos casos con relaciones dirigidas. 
+
+La segunda limitante fue el análisis de la actividad de la red social en periodos de tiempo establecidos, sin importar la cantidad de interacciones en dicho periodo. Cabe mencionar, la importancia del tiempo entre interacciones y usuarios únicos que participan (ver sección de Discusión). Entonces, se propone una modelación de red multicapa, donde los nodos son los usuarios, cada capa representa una comunidad y los enlaces intercapa podrían representar la unión de las comunidades.
+
+% Una de las características relevantes fue el análisis de la actividad de la red social en periodos de tiempo establecidos sin importar la cantidad de interacciones. En la sección de discusión se habla un poco de la importancia del tiempo entre interacciones y usuarios únicos que participan. Como segunda propuesta, una modelación de una red multicapa de redes interconectadas donde los nodos son los usuarios y cada red interconectada representa una comunidad, los enlaces intercapa pueden representar la unión de las comunidades.  
+
+La tercera limitante fue que el trabajo se enfocó únicamente en el servicio de media social Twitter. Así que, una propuesta, al considerar las nuevas dinámicas en redes sociales, sería integrar otras redes de media sociales. 
+
+% Otra modelación relevante, considerando las nuevas dinámicas en redes sociales, es la integración de otras redes de media social. 
+
+Finalmente, la característica principal de este trabajo fue el enfoque en la estructura de las comunidades, es decir, no eran relevantes las características particulares de nodos importantes. Lo anterior conlleva a considerar si ese comportamiento era influenciado únicamente con la actividad de un nodo importante o no. Por tanto, la última propuesta sería analizar la actividad de los nodos importantes para propiciar un comportamiento explosivo en función de métricas de centralidad y el tiempo entre sus actividades en una red multicapa dimensional.
+
+
+
+
+
+% La característica principal de este trabajo fue el enfoque en la estructura de las comunidades. Es decir, no son relevantes las características particulares de nodos importantes. Una pregunta interesante es si este comportamiento es influenciado únicamente con la actividad de un nodo importante. Con esto, una última propuesta es analizar la actividad de los nodos importantes para propiciar un comportamiento explosivo en función de métricas de centralidad y el tiempo entre sus actividades en una red multicapa dimensional. 
+
+
+% \subsection{prueba}
+
+
+
+
+% Además, otras limitantes implícitas fueron los tiempos y recursos computacionales. Un problema de interés puede ser reducir cada una de las métricas realizadas en una implementación más efectiva. Así, la siguiente propuesta de investigación puede asociar 
+
+% Los últimos análisis sobre el comportamiento anterior de la mayor interacción entre usuarios, permite preguntarnos sobre un modelo teórico de difusión que involucre diversas variables de interés. Entre dichas métricas debe estar la modularidad y el número de comunidades. Además, involucrar una variable del tiempo la cual definirá cuáles nodos iniciadores de la difusión y con qué frecuencia lo harán. De esta idea han existido intentos [\cite{D_weng2014predicting,Nematzadeh2014}] sin embargo, se pone el supuesto fuerte de no considerar una nueva interacción de los nodos que hayan interactuado.
+
+
+\end{document}
+
+
+\section*{Trabajo futuro}
+
+
+Las limitantes de este trabajo fue la reducción de los enlaces en relaciones no dirigidas; es decir, que existe una relación mutua de seguimiento entre los usuarios. Sin embargo, este comportamiento no es esperable en la mayoría de las cuentas actuales y los comportamientos explosivos siguen apareciendo. Una propuesta de investigación es analizar estos casos con relaciones dirigidas. 
+
+Además, otros limitantes implícitos fueron los tiempos y recursos computacionales. Un problema de interés puede ser reducir cada una de las métricas realizadas en una implementación más efectiva. Así, la siguiente propuesta de investigación puede asociar 
+
+Los últimos análisis sobre el comportamiento anterior de la mayor interacción entre usuarios, permite preguntarnos sobre un modelo teórico de difusión que involucre diversas variables de interés. Entre dichas métricas debe estar la modularidad y el número de comunidades. Además, involucrar una variable del tiempo la cual definirá cuáles nodos iniciadores de la difusión y con qué frecuencia lo harán. De esta idea han existido intentos [\cite{D_weng2014predicting,Nematzadeh2014}] sin embargo, se pone el supuesto fuerte de no considerar una nueva interacción de los nodos que hayan interactuado.
