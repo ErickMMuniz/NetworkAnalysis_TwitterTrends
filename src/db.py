@@ -21,14 +21,16 @@ from datetime import datetime
 from typing import Optional, Dict, Any
 from itertools import chain
 
+
 def read_analyzed_trend():
+    logging.warning("[INFO] READING VALID TRENDS")
     assert os.path.isdir(ACITVE_USERS_IN_15MINUTES_WINDOWS_FOLDER)
 
     TRENDS = read_all_trends_names()[:]
     labeled_trends = pd.read_csv(FINAL_DF_PATH)["trend"].to_list()
     logging.warning("TRENDS IMPORTED")
     trends = list(set(TRENDS) & set(labeled_trends))
-
+    logging.warning("[INFO] SENDING VALID TRENDS")
     return trends
 
 

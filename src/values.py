@@ -6,6 +6,12 @@ from numpy import array_split
 SEED = 11245
 ALEGREYA = "Alegreya"
 
+# COLORS
+PURPLE = "purple"
+ORANGE = "orange"
+
+COLOR = {1: PURPLE, 0: ORANGE}
+
 MINIMUN_TWEETS = 4000
 WINDOW_STUDY = 30
 
